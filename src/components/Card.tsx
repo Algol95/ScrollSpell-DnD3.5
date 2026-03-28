@@ -23,6 +23,11 @@ const levelColors: Record<number, string> = {
   9: "border-red-700/40",
 };
 
+/**
+ * Componente de tarjeta de hechizo que muestra la información detallada de un hechizo, incluyendo nombre, escuela, nivel, tiempo de lanzamiento, alcance, componentes, duración, objetivo/área, salvación y resistencia a conjuros. Permite eliminar el hechizo si se proporciona la función onDelete y no está en modo de impresión.
+ * @param param0 Props del componente Card, incluyendo el hechizo, la función para eliminar el hechizo y el estado de modo de impresión.
+ * @returns Elemento JSX que representa la tarjeta de hechizo.
+ */
 export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
   const borderColor = levelColors[spell.level] || levelColors[0];
 
