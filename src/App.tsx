@@ -1,120 +1,279 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Header } from "./components/Header";
+import { Page } from "./components/Page";
+import { Form } from "./components/Form";
+import { Button } from "./components/ui/Button";
+import { Plus } from "lucide-react";
+import type { Spell, SpellbookPage as PageType } from "../lib/types";
+import { useReactToPrint } from "react-to-print";
 import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0);
+const STORAGE_KEY = "grimorio_arcano_data";
+
+interface SpellbookData {
+  title: string;
+  pages: PageType[];
+}
+
+const createEmptyPage = (pageNumber: number): PageType => ({
+  id: crypto.randomUUID(),
+  pageNumber,
+  spells: [],
+});
+
+const loadFromStorage = (): SpellbookData | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {
+    console.error("Error loading from localStorage:", e);
+  }
+  return null;
+};
+
+const saveToStorage = (data: SpellbookData) => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.error("Error saving to localStorage:", e);
+  }
+};
+
+export function App() {
+  const [pages, setPages] = useState<PageType[]>([createEmptyPage(1)]);
+  const [title, setTitle] = useState("Grimorio Arcano");
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const stored = loadFromStorage();
+    if (stored) {
+      setTitle(stored.title);
+      setPages(stored.pages.length > 0 ? stored.pages : [createEmptyPage(1)]);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      saveToStorage({ title, pages });
+    }
+  }, [title, pages, isLoaded]);
+
+  const handleAddSpell = useCallback(
+    (spell: Spell) => {
+      setPages((prev) => {
+        const newPages = [...prev];
+        const targetPage = newPages[currentPageIndex];
+
+        if (targetPage.spells.length >= 1) {
+          const newPage = createEmptyPage(newPages.length + 1);
+          newPage.spells.push(spell);
+          newPages.push(newPage);
+          setTimeout(() => setCurrentPageIndex(newPages.length - 1), 0);
+        } else {
+          targetPage.spells.push(spell);
+        }
+
+        return newPages;
+      });
+    },
+    [currentPageIndex],
+  );
+
+  const handleDeleteSpell = useCallback((pageId: string, spellId: string) => {
+    setPages((prev) =>
+      prev.map((page) =>
+        page.id === pageId
+          ? { ...page, spells: page.spells.filter((s) => s.id !== spellId) }
+          : page,
+      ),
+    );
+  }, []);
+
+  const handleAddPage = useCallback(() => {
+    setPages((prev) => {
+      const newPages = [...prev, createEmptyPage(prev.length + 1)];
+      setCurrentPageIndex(newPages.length - 1);
+      return newPages;
+    });
+  }, []);
+
+  const handleDeletePage = useCallback(
+    (pageId: string) => {
+      setPages((prev) => {
+        if (prev.length <= 1) return prev;
+        const newPages = prev
+          .filter((p) => p.id !== pageId)
+          .map((page, idx) => ({ ...page, pageNumber: idx + 1 }));
+
+        if (currentPageIndex >= newPages.length) {
+          setCurrentPageIndex(newPages.length - 1);
+        }
+        return newPages;
+      });
+    },
+    [currentPageIndex],
+  );
+
+  const handlePageChange = useCallback(
+    (pageNum: number) => {
+      if (pageNum >= 1 && pageNum <= pages.length) {
+        setCurrentPageIndex(pageNum - 1);
+      }
+    },
+    [pages.length],
+  );
+
+  const handleTitleChange = useCallback((newTitle: string) => {
+    setTitle(newTitle);
+  }, []);
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: title.replace(/\s+/g, "_"),
+    onBeforePrint: async () => {
+      setIsGeneratingPDF(true);
+    },
+    onAfterPrint: () => {
+      setIsGeneratingPDF(false);
+    },
+  });
+
+  useEffect(() => {
+    const pageElement = document.getElementById(`page-${currentPageIndex}`);
+    if (pageElement) {
+      pageElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [currentPageIndex]);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl text-gold mb-4 animate-pulse">&#x2726;</div>
+          <p className="text-muted-foreground">Cargando grimorio...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-background">
+      <Header
+        title={title}
+        onTitleChange={handleTitleChange}
+        totalPages={pages.length}
+        currentPage={currentPageIndex + 1}
+        onPageChange={handlePageChange}
+        onGeneratePDF={() => handlePrint()}
+        isGeneratingPDF={isGeneratingPDF}
+      />
 
-      <div className="ticks"></div>
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <span className="text-gold">&#x2726;</span>
+                Vista Previa del Grimorio
+              </h2>
+              <span className="text-sm text-muted-foreground">
+                {pages.reduce((acc, p) => acc + p.spells.length, 0)} hechizos
+                inscritos
+              </span>
+            </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
+            <div className="space-y-8 max-h-[calc(100vh-200px)] overflow-y-auto pr-2 pb-4">
+              {pages.map((page, index) => (
+                <div
+                  key={page.id}
+                  id={`page-${index}`}
+                  className={`transition-all duration-300 ${
+                    index === currentPageIndex
+                      ? "ring-2 ring-gold ring-offset-4 ring-offset-background"
+                      : "opacity-70 hover:opacity-100"
+                  }`}
+                  onClick={() => setCurrentPageIndex(index)}
                 >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+                  <Page
+                    page={page}
+                    title={title}
+                    onDeleteSpell={handleDeleteSpell}
+                    onDeletePage={
+                      pages.length > 1 ? handleDeletePage : undefined
+                    }
+                  />
+                </div>
+              ))}
+            </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+            <Button
+              variant="outline"
+              className="w-full border-dashed border-2 border-border hover:border-gold hover:text-gold"
+              onClick={handleAddPage}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Añadir Nueva Página
+            </Button>
+          </div>
+
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <Form
+              onAddSpell={handleAddSpell}
+              currentPageNumber={currentPageIndex + 1}
+            />
+
+            <div className="mt-6 p-4 bg-secondary/50 rounded-lg border border-border">
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Consejos del Archimago
+              </h3>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li>Cada pagina contiene un unico hechizo</li>
+                <li>Haz clic en una pagina para seleccionarla</li>
+                <li>Pasa el raton sobre un hechizo para eliminarlo</li>
+                <li>El grimorio se guarda automaticamente</li>
+                <li>Puedes editar el titulo en la cabecera</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div className="hidden">
+        <div ref={printRef} className="print-container">
+          <style>{`
+            @media print {
+              @page {
+                size: A4;
+                margin: 0;
+              }
+              .print-page {
+                page-break-after: always;
+                width: 210mm;
+                height: 297mm;
+                padding: 10mm;
+                box-sizing: border-box;
+              }
+              .print-page:last-child {
+                page-break-after: auto;
+              }
+            }
+          `}</style>
+          {pages.map((page) => (
+            <div key={page.id} className="print-page">
+              <Page page={page} title={title} isPrintMode />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

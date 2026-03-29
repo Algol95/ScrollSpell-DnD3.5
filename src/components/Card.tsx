@@ -126,19 +126,7 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
         </p>
       </div>
 
-      {/* Level indicator */}
-      <div className="mt-3 pt-2 border-t border-ink/10 flex justify-center">
-        <div className="flex items-center gap-1">
-          {Array.from({ length: spell.level || 1 }).map((_, i) => (
-            <span key={i} className="w-1.5 h-1.5 rounded-full bg-ink/30" />
-          ))}
-          {spell.level === 0 && (
-            <span className="text-[10px] text-ink/40 italic font-serif">
-              Truco
-            </span>
-          )}
-        </div>
-      </div>
+      {/* Indicador de nivel eliminado para que al pie solo se muestre el número de página. */}
     </div>
   );
 }
