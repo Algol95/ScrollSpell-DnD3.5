@@ -45,7 +45,7 @@ export function Page({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover/page:opacity-100 transition-opacity bg-destructive/90 text-destructive-foreground hover:bg-destructive rounded-full z-10"
+          className="absolute top-2 right-2 h-7 w-7 bg-destructive/90 text-destructive-foreground hover:bg-destructive rounded-full z-20 opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onDeletePage(page.id);

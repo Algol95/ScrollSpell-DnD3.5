@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { Page } from "./components/Page";
 import { Form } from "./components/Form";
 import { Button } from "./components/ui/Button";
+import { Footer } from "./components/Footer";
 import { Plus } from "lucide-react";
 import type { Spell, SpellbookPage as PageType } from "../lib/types";
 import { useReactToPrint } from "react-to-print";
@@ -46,6 +47,7 @@ const saveToStorage = (data: SpellbookData) => {
 export function App() {
   const [pages, setPages] = useState<PageType[]>([createEmptyPage(1)]);
   const [title, setTitle] = useState("Grimorio Arcano");
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -134,22 +136,40 @@ export function App() {
     });
   }, []);
 
-  const handleDeletePage = useCallback(
-    (pageId: string) => {
-      setPages((prev) => {
-        if (prev.length <= 1) return prev;
-        const newPages = prev
-          .filter((p) => p.id !== pageId)
-          .map((page, idx) => ({ ...page, pageNumber: idx + 1 }));
+  const handleDeletePage = useCallback((pageId: string) => {
+    setPages((prev) => {
+      if (prev.length <= 1) return prev;
+      const deleteIndex = prev.findIndex((p) => p.id === pageId);
+      if (deleteIndex === -1) return prev;
 
-        if (currentPageIndex >= newPages.length) {
-          setCurrentPageIndex(newPages.length - 1);
+      // Ajustar el índice de página actual antes de eliminar
+      setCurrentPageIndex((prevIndex) => {
+        if (prevIndex === deleteIndex) {
+          // Si es la primera, quedarse en la 0; si no, ir a la anterior
+          return deleteIndex === 0 ? 0 : prevIndex - 1;
         }
-        return newPages;
+        if (prevIndex > deleteIndex) return prevIndex - 1;
+        return prevIndex;
       });
-    },
-    [currentPageIndex],
-  );
+
+      // Limpiar edición si corresponde
+      setEditingSpell((current) => {
+        if (
+          current &&
+          prev[deleteIndex] &&
+          current.pageId === prev[deleteIndex].id
+        ) {
+          return null;
+        }
+        return current;
+      });
+
+      const newPages = prev
+        .filter((p) => p.id !== pageId)
+        .map((page, idx) => ({ ...page, pageNumber: idx + 1 }));
+      return newPages;
+    });
+  }, []);
 
   const handlePageChange = useCallback(
     (pageNum: number) => {
@@ -194,7 +214,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header
         title={title}
         onTitleChange={handleTitleChange}
@@ -229,7 +249,14 @@ export function App() {
                       ? "ring-2 ring-gold ring-offset-4 ring-offset-background"
                       : "opacity-70 hover:opacity-100"
                   }`}
-                  onClick={() => {
+                  onClick={(e) => {
+                    // Si el click viene del botón de eliminar, no cambiar el índice ni editar
+                    if (
+                      (e.target as HTMLElement).closest(
+                        "button[data-delete-page]",
+                      )
+                    )
+                      return;
                     setCurrentPageIndex(index);
                     const spell = page.spells[0];
                     if (spell) {
@@ -253,7 +280,7 @@ export function App() {
 
             <Button
               variant="outline"
-              className="w-full border-dashed border-2 border-border hover:border-gold hover:text-gold"
+              className="w-full border-2 border-border hover:bg-secondary"
               onClick={handleAddPage}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -312,6 +339,8 @@ export function App() {
           ))}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
