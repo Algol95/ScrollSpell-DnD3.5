@@ -1,4 +1,4 @@
-# ScrollSpell DnD
+# BookSpell DnD
 
 ScrollSpell DnD es una aplicación web desarrollada en React + TypeScript que permite a jugadores y Dungeon Masters de Dungeons & Dragons 3.5 gestionar, crear e imprimir grimorios de hechizos personalizados de manera visual, rápida y flexible.
 
