@@ -49,6 +49,10 @@ export function App() {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [editingSpell, setEditingSpell] = useState<{
+    pageId: string;
+    spell: Spell;
+  } | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -83,8 +87,28 @@ export function App() {
 
         return newPages;
       });
+      setEditingSpell(null);
     },
     [currentPageIndex],
+  );
+
+  const handleUpdateSpell = useCallback(
+    (pageId: string, updatedSpell: Spell) => {
+      setPages((prev) =>
+        prev.map((page) =>
+          page.id === pageId
+            ? {
+                ...page,
+                spells: page.spells.map((s) =>
+                  s.id === updatedSpell.id ? updatedSpell : s,
+                ),
+              }
+            : page,
+        ),
+      );
+      setEditingSpell(null);
+    },
+    [],
   );
 
   const handleDeleteSpell = useCallback((pageId: string, spellId: string) => {
@@ -94,6 +118,11 @@ export function App() {
           ? { ...page, spells: page.spells.filter((s) => s.id !== spellId) }
           : page,
       ),
+    );
+    setEditingSpell((current) =>
+      current && current.pageId === pageId && current.spell.id === spellId
+        ? null
+        : current,
     );
   }, []);
 
@@ -200,7 +229,15 @@ export function App() {
                       ? "ring-2 ring-gold ring-offset-4 ring-offset-background"
                       : "opacity-70 hover:opacity-100"
                   }`}
-                  onClick={() => setCurrentPageIndex(index)}
+                  onClick={() => {
+                    setCurrentPageIndex(index);
+                    const spell = page.spells[0];
+                    if (spell) {
+                      setEditingSpell({ pageId: page.id, spell });
+                    } else {
+                      setEditingSpell(null);
+                    }
+                  }}
                 >
                   <Page
                     page={page}
@@ -227,7 +264,9 @@ export function App() {
           <div className="lg:sticky lg:top-24 lg:self-start">
             <Form
               onAddSpell={handleAddSpell}
+              onUpdateSpell={handleUpdateSpell}
               currentPageNumber={currentPageIndex + 1}
+              editingSpell={editingSpell}
             />
 
             <div className="mt-6 p-4 bg-secondary/50 rounded-lg border border-border">

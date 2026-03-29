@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
@@ -17,7 +17,9 @@ import { ScrollText, Sparkles } from "lucide-react";
 
 interface SpellFormProps {
   onAddSpell: (spell: Spell) => void;
+  onUpdateSpell: (pageId: string, spell: Spell) => void;
   currentPageNumber: number;
+  editingSpell?: { pageId: string; spell: Spell } | null;
 }
 
 const DESCRIPTION_MAX_LENGTH = 1000;
@@ -27,7 +29,12 @@ const DESCRIPTION_MAX_LENGTH = 1000;
  * @param param0 Props del componente Form, incluyendo onAddSpell y currentPageNumber.
  * @returns Elemento JSX que representa el formulario de hechizo.
  */
-export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
+export function Form({
+  onAddSpell,
+  onUpdateSpell,
+  currentPageNumber,
+  editingSpell,
+}: SpellFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     level: "0",
@@ -42,13 +49,52 @@ export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
     spellResistance: "",
   });
 
+  const [editingMeta, setEditingMeta] = useState<{
+    pageId: string;
+    id: string;
+  } | null>(null);
+
   const descriptionLength = formData.description.length;
+
+  // Rellenar el formulario cuando recibimos un hechizo en edición
+  useEffect(() => {
+    if (editingSpell) {
+      const { spell, pageId } = editingSpell;
+      setFormData({
+        name: spell.name,
+        level: spell.level.toString(),
+        school: spell.school,
+        castingTime: spell.castingTime,
+        range: spell.range,
+        components: spell.components,
+        duration: spell.duration,
+        description: spell.description,
+        target: spell.target ?? "",
+        savingThrow: spell.savingThrow ?? "",
+        spellResistance: spell.spellResistance ?? "",
+      });
+      setEditingMeta({ pageId, id: spell.id });
+    } else {
+      setEditingMeta(null);
+      setFormData({
+        name: "",
+        level: "0",
+        school: "",
+        castingTime: "",
+        range: "",
+        components: "",
+        duration: "",
+        description: "",
+        target: "",
+        savingThrow: "",
+        spellResistance: "",
+      });
+    }
+  }, [editingSpell]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const spell: Spell = {
-      id: crypto.randomUUID(),
+    const baseSpell: Omit<Spell, "id"> = {
       name: formData.name,
       level: parseInt(formData.level),
       school: formData.school,
@@ -62,21 +108,15 @@ export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
       spellResistance: formData.spellResistance || undefined,
     };
 
-    onAddSpell(spell);
-
-    setFormData({
-      name: "",
-      level: "0",
-      school: "",
-      castingTime: "",
-      range: "",
-      components: "",
-      duration: "",
-      description: "",
-      target: "",
-      savingThrow: "",
-      spellResistance: "",
-    });
+    if (editingMeta) {
+      onUpdateSpell(editingMeta.pageId, { id: editingMeta.id, ...baseSpell });
+    } else {
+      const spell: Spell = {
+        id: crypto.randomUUID(),
+        ...baseSpell,
+      };
+      onAddSpell(spell);
+    }
   };
 
   return (
@@ -84,7 +124,7 @@ export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
       <div className="flex items-center gap-3 mb-6">
         <ScrollText className="h-6 w-6 text-gold" />
         <h2 className="text-xl font-semibold text-foreground">
-          Inscribir Hechizo
+          {editingMeta ? "Editar Hechizo" : "Inscribir Hechizo"}
         </h2>
         <span className="ml-auto text-sm text-muted-foreground">
           Página {currentPageNumber}
@@ -298,7 +338,7 @@ export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
           }
         >
           <Sparkles className="h-4 w-4 mr-2" />
-          Inscribir en el Grimorio
+          {editingMeta ? "Actualizar Hechizo" : "Inscribir en el Grimorio"}
         </Button>
       </form>
     </div>
