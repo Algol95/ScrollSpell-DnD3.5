@@ -20,6 +20,8 @@ interface SpellFormProps {
   currentPageNumber: number;
 }
 
+const DESCRIPTION_MAX_LENGTH = 1000;
+
 /**
  * Componente de formulario para inscribir un hechizo. Permite ingresar los detalles del hechizo y enviarlos mediante la función onAddSpell.
  * @param param0 Props del componente Form, incluyendo onAddSpell y currentPageNumber.
@@ -39,6 +41,8 @@ export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
     savingThrow: "",
     spellResistance: "",
   });
+
+  const descriptionLength = formData.description.length;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -272,8 +276,12 @@ export function Form({ onAddSpell, currentPageNumber }: SpellFormProps) {
             placeholder="Una brillante estría sale de tu dedo apuntador hacia un punto que elijas..."
             required
             rows={4}
-            className="bg-input border-border resize-none"
+            maxLength={DESCRIPTION_MAX_LENGTH}
+            className="bg-input border-border resize-none max-h-40 overflow-y-auto"
           />
+          <div className="flex justify-end text-xs text-muted-foreground">
+            {descriptionLength}/{DESCRIPTION_MAX_LENGTH}
+          </div>
         </div>
 
         <Button

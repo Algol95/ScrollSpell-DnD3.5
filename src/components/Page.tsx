@@ -39,10 +39,8 @@ export function Page({
         backgroundSize: "20px 20px, 20px 20px, 100% 100%",
       }}
     >
-      {/* Magic Glyph Background */}
       {spell && <Glyph level={spell.level} school={spell.school} />}
 
-      {/* Delete page button */}
       {!isPrintMode && onDeletePage && !spell && (
         <Button
           variant="ghost"
@@ -57,24 +55,19 @@ export function Page({
         </Button>
       )}
 
-      {/* Decorative border */}
       <div className="absolute inset-3 border-2 border-ink/10 rounded-sm pointer-events-none" />
       <div className="absolute inset-4 border border-ink/5 rounded-sm pointer-events-none" />
 
-      {/* Corner decorations */}
       <div className="absolute top-5 left-5 w-10 h-10 border-t-2 border-l-2 border-gold/40" />
       <div className="absolute top-5 right-5 w-10 h-10 border-t-2 border-r-2 border-gold/40" />
       <div className="absolute bottom-5 left-5 w-10 h-10 border-b-2 border-l-2 border-gold/40" />
       <div className="absolute bottom-5 right-5 w-10 h-10 border-b-2 border-r-2 border-gold/40" />
 
-      {/* Page number */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-ink/40 font-serif italic z-10">
         &#x2014; {page.pageNumber} &#x2014;
       </div>
 
-      {/* Content */}
       <div className="relative p-6 h-full flex flex-col z-10">
-        {/* Page header */}
         <div className="text-center mb-4">
           <div className="inline-block">
             <span className="text-lg text-gold">&#x2726;</span>
@@ -86,7 +79,6 @@ export function Page({
           <div className="mt-1 mx-auto w-24 h-px bg-linear-to-r from-transparent via-ink/20 to-transparent" />
         </div>
 
-        {/* Spell Content - Full page */}
         <div className="flex-1 flex flex-col">
           {!spell ? (
             <div className="flex-1 flex flex-col items-center justify-center text-ink/30">

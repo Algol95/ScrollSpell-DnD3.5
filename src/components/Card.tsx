@@ -10,27 +10,12 @@ interface CardProps {
   isPrintMode?: boolean;
 }
 
-const levelColors: Record<number, string> = {
-  0: "border-stone-400/30",
-  1: "border-emerald-600/30",
-  2: "border-sky-600/30",
-  3: "border-violet-600/30",
-  4: "border-amber-600/30",
-  5: "border-rose-600/30",
-  6: "border-indigo-600/30",
-  7: "border-fuchsia-600/30",
-  8: "border-orange-600/30",
-  9: "border-red-700/40",
-};
-
 /**
  * Componente de tarjeta de hechizo que muestra la información detallada de un hechizo, incluyendo nombre, escuela, nivel, tiempo de lanzamiento, alcance, componentes, duración, objetivo/área, salvación y resistencia a conjuros. Permite eliminar el hechizo si se proporciona la función onDelete y no está en modo de impresión.
  * @param param0 Props del componente Card, incluyendo el hechizo, la función para eliminar el hechizo y el estado de modo de impresión.
  * @returns Elemento JSX que representa la tarjeta de hechizo.
  */
 export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
-  const borderColor = levelColors[spell.level] || levelColors[0];
-
   return (
     <div className="relative group w-full h-full flex flex-col">
       {!isPrintMode && onDelete && (
@@ -48,7 +33,7 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
       )}
 
       {/* Header */}
-      <div className={`text-center pb-3 mb-3 border-b-2 ${borderColor}`}>
+      <div className="text-center pb-3 mb-3 border-b-2 border-stone-400/30">
         <h3 className="font-sans font-bold text-ink text-xl leading-tight">
           {spell.name}
         </h3>
@@ -121,7 +106,7 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
         <h4 className="font-semibold text-ink/50 mb-1 text-[10px] uppercase tracking-wide">
           Descripcion
         </h4>
-        <p className="text-ink/80 leading-relaxed font-serif text-sm">
+        <p className="text-ink/80 leading-relaxed font-serif text-sm whitespace-pre-line">
           {spell.description}
         </p>
       </div>

@@ -22,6 +22,23 @@ const schoolSymbols: Record<string, string> = {
     "M50,5 L65,25 L90,25 L72,42 L80,65 L55,52 L50,75 L45,52 L20,65 L28,42 L10,25 L35,25 Z M50,30 A20,20 0 1,1 50,70 A20,20 0 1,1 50,30",
 };
 
+const schoolColors: Record<string, string> = {
+  Abjuracion: "#4b5563", // gris
+  Conjuracion: "#0f766e", // verde azulado
+  Adivinacion: "#1d4ed8", // azul
+  Encantamiento: "#7c3aed", // violeta
+  Evocacion: "#b45309", // ámbar
+  Ilusion: "#6b21a8", // púrpura
+  Nigromancia: "#111827", // casi negro
+  Transmutacion: "#16a34a", // verde
+};
+
+function normalizeSchoolName(name: string): string {
+  // Quitar acentos y normalizar para coincidir con las claves del mapa
+  const noAccents = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return noAccents.trim();
+}
+
 /**
  * Componente que representa un glifo mágico basado en el nivel y la escuela de un hechizo. El glifo se compone de anillos concéntricos, runas alrededor del círculo, líneas cruzadas para niveles más altos y un símbolo específico de la escuela en el centro. El diseño se adapta dinámicamente según el nivel del hechizo, proporcionando una representación visual única para cada combinación de nivel y escuela.
  * @param param0 Props del componente MagicGlyph, incluyendo el nivel y la escuela del hechizo.
@@ -29,11 +46,14 @@ const schoolSymbols: Record<string, string> = {
  */
 export function Glyph({ level, school }: MagicGlyphProps) {
   const baseSize = 120 + level * 25;
-  const opacity = 0.8;
+  const opacity = 0.25;
   const rings = Math.min(Math.floor(level / 2) + 1, 5);
   const runes = Math.min(level + 4, 12);
 
-  const schoolPath = schoolSymbols[school] || schoolSymbols["Evocacion"];
+  const normalizedSchool = normalizeSchoolName(school);
+  const schoolPath =
+    schoolSymbols[normalizedSchool] || schoolSymbols["Evocacion"];
+  const glyphColor = schoolColors[normalizedSchool] || "#7c6a58";
 
   const runeSymbols = [
     "A",
@@ -60,7 +80,7 @@ export function Glyph({ level, school }: MagicGlyphProps) {
         height={baseSize}
         viewBox="0 0 100 100"
         className="text-ink"
-        style={{ opacity }}
+        style={{ opacity, color: glyphColor }}
       >
         {/* Outer rings based on level */}
         {Array.from({ length: rings }).map((_, i) => (
