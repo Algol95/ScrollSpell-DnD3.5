@@ -22,11 +22,14 @@ interface SpellFormProps {
   editingSpell?: { pageId: string; spell: Spell } | null;
 }
 
-const DESCRIPTION_MAX_LENGTH = 1000;
+const DESCRIPTION_MAX_LENGTH = 3000;
 
 /**
  * Componente de formulario para inscribir un hechizo. Permite ingresar los detalles del hechizo y enviarlos mediante la función onAddSpell.
- * @param param0 Props del componente Form, incluyendo onAddSpell y currentPageNumber.
+ * @param onAddSpell Función que se llama al enviar el formulario para agregar un nuevo hechizo.
+ * @param onUpdateSpell Función que se llama al enviar el formulario para actualizar un hechizo existente.
+ * @param currentPageNumber Número de página actual, utilizado para mostrar en el encabezado del formulario.
+ * @param editingSpell Objeto opcional que contiene el hechizo a editar y su página correspondiente. Si se proporciona, el formulario se rellenará con los datos del hechizo para su edición.
  * @returns Elemento JSX que representa el formulario de hechizo.
  */
 export function Form({
@@ -120,6 +123,19 @@ export function Form({
         ...baseSpell,
       };
       onAddSpell(spell);
+      setFormData({
+        name: "",
+        level: "0",
+        school: "",
+        castingTime: "",
+        range: "",
+        components: "",
+        duration: "",
+        description: "",
+        target: "",
+        savingThrow: "",
+        spellResistance: "",
+      });
     }
   };
 
