@@ -1,6 +1,6 @@
-# BookSpell DnD
+# Spellbook Generator DnD3.5
 
-BookSpell DnD es una aplicación web desarrollada en React + TypeScript que permite a jugadores y Dungeon Masters de Dungeons & Dragons 3.5 gestionar, crear e imprimir grimorios de hechizos personalizados de manera visual, rápida y flexible.
+Spellbook Generator DnD3.5 es una aplicación web desarrollada en React + TypeScript que permite a jugadores y Dungeon Masters de Dungeons & Dragons 3.5 gestionar, crear e imprimir grimorios de hechizos personalizados de manera visual, rápida y flexible.
 
 ## Características principales
 
