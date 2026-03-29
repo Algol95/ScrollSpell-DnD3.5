@@ -7,6 +7,7 @@ export interface UseSpellFormProps {
 
 const INITIAL_FORM = {
   name: "",
+  subtitle: "",
   level: "0",
   school: "",
   castingTime: "",
@@ -32,6 +33,7 @@ export function useSpellForm({ editingSpell }: UseSpellFormProps) {
       Promise.resolve().then(() => {
         setFormData({
           name: spell.name,
+          subtitle: spell.subtitle ?? "",
           level: spell.level.toString(),
           school: spell.school,
           castingTime: spell.castingTime,

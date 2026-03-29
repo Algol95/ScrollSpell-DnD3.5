@@ -1,6 +1,7 @@
 export interface Spell {
   id: string;
   name: string;
+  subtitle?: string;
   level: number;
   school: string;
   castingTime: string;

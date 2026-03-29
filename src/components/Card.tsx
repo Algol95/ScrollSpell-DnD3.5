@@ -37,6 +37,11 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
         <h3 className="font-sans font-bold text-ink text-xl leading-tight">
           {spell.name}
         </h3>
+        {spell.subtitle && (
+          <div className="text-ink/50 text-xs font-serif italic mt-0.5">
+            {spell.subtitle}
+          </div>
+        )}
         <p className="italic text-ink/60 mt-1 text-sm font-serif">
           {spell.school} - Nivel {spell.level}
         </p>
@@ -101,10 +106,10 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
       {/* Divider */}
       <div className="my-2 mx-auto w-16 h-px bg-linear-to-r from-transparent via-ink/20 to-transparent" />
 
-      {/* Description */}
+      {/* Notas del Mago */}
       <div className="flex-1">
         <h4 className="font-semibold text-ink/50 mb-1 text-[10px] uppercase tracking-wide">
-          Descripcion
+          Notas del Mago
         </h4>
         <p className="text-ink/80 leading-relaxed font-serif text-sm whitespace-pre-line">
           {spell.description}

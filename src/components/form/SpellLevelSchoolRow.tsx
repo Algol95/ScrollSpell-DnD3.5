@@ -13,26 +13,26 @@ import {
  * @param param0 Props del componente SpellLevelSchoolRow, incluyendo el nivel, la escuela, las funciones para actualizar el nivel y la escuela, y la lista de escuelas de magia disponibles.
  * @returns Elemento JSX que representa la fila de selección de nivel y escuela para un hechizo.
  */
+interface SpellLevelSchoolRowProps {
+  level: string;
+  school: string;
+  setValue: (field: "level" | "school", value: string) => void;
+  spellSchools: string[];
+}
+
 export function SpellLevelSchoolRow({
   level,
   school,
-  setLevel,
-  setSchool,
+  setValue,
   spellSchools,
-}: {
-  level: string;
-  school: string;
-  setLevel: (v: string) => void;
-  setSchool: (v: string) => void;
-  spellSchools: string[];
-}) {
+}: SpellLevelSchoolRowProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
         <Label htmlFor="level" className="text-foreground">
           Nivel *
         </Label>
-        <Select value={level} onValueChange={setLevel}>
+        <Select value={level} onValueChange={(v) => setValue("level", v)}>
           <SelectTrigger className="bg-input border-border">
             <SelectValue placeholder="Nivel" />
           </SelectTrigger>
@@ -49,7 +49,7 @@ export function SpellLevelSchoolRow({
         <Label htmlFor="school" className="text-foreground">
           Escuela *
         </Label>
-        <Select value={school} onValueChange={setSchool}>
+        <Select value={school} onValueChange={(v) => setValue("school", v)}>
           <SelectTrigger className="bg-input border-border">
             <SelectValue placeholder="Escuela" />
           </SelectTrigger>

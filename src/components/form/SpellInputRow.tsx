@@ -6,21 +6,20 @@ import { Input } from "../../components/ui/Input";
  * @param param0 Props del componente SpellInputRow, incluyendo el id, la etiqueta, el valor, la función onChange, el placeholder y si es obligatorio.
  * @returns Elemento JSX que representa una fila de entrada de texto para un hechizo.
  */
+import type { InputHTMLAttributes } from "react";
+
+interface SpellInputRowProps extends InputHTMLAttributes<HTMLInputElement> {
+  id: string;
+  label: string;
+  required?: boolean;
+}
+
 export function SpellInputRow({
   id,
   label,
-  value,
-  onChange,
-  placeholder,
   required = false,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  required?: boolean;
-}) {
+  ...inputProps
+}: SpellInputRowProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={id} className="text-foreground">
@@ -29,11 +28,9 @@ export function SpellInputRow({
       </Label>
       <Input
         id={id}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
         required={required}
         className="bg-input border-border"
+        {...inputProps}
       />
     </div>
   );

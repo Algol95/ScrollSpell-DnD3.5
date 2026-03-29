@@ -6,29 +6,25 @@ import { Input } from "../../components/ui/Input";
  * @param param0 Props del componente SpellGridRow, incluyendo los ids, etiquetas, valores, funciones onChange y placeholders para los campos izquierdo y derecho.
  * @returns Elemento JSX que representa una fila de entrada de texto para un hechizo con dos columnas.
  */
+import type { InputHTMLAttributes } from "react";
+
+interface SpellGridRowProps {
+  leftId: string;
+  leftLabel: string;
+  leftInputProps?: InputHTMLAttributes<HTMLInputElement>;
+  rightId: string;
+  rightLabel: string;
+  rightInputProps?: InputHTMLAttributes<HTMLInputElement>;
+}
+
 export function SpellGridRow({
   leftId,
   leftLabel,
-  leftValue,
-  leftOnChange,
-  leftPlaceholder,
+  leftInputProps = {},
   rightId,
   rightLabel,
-  rightValue,
-  rightOnChange,
-  rightPlaceholder,
-}: {
-  leftId: string;
-  leftLabel: string;
-  leftValue: string;
-  leftOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  leftPlaceholder?: string;
-  rightId: string;
-  rightLabel: string;
-  rightValue: string;
-  rightOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  rightPlaceholder?: string;
-}) {
+  rightInputProps = {},
+}: SpellGridRowProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
@@ -37,10 +33,8 @@ export function SpellGridRow({
         </Label>
         <Input
           id={leftId}
-          value={leftValue}
-          onChange={leftOnChange}
-          placeholder={leftPlaceholder}
           className="bg-input border-border"
+          {...leftInputProps}
         />
       </div>
       <div className="space-y-2">
@@ -49,10 +43,8 @@ export function SpellGridRow({
         </Label>
         <Input
           id={rightId}
-          value={rightValue}
-          onChange={rightOnChange}
-          placeholder={rightPlaceholder}
           className="bg-input border-border"
+          {...rightInputProps}
         />
       </div>
     </div>

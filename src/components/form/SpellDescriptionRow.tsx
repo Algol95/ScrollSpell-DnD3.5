@@ -6,17 +6,18 @@ import { Textarea } from "../../components/ui/Textarea";
  * @param param0 Props del componente SpellDescriptionRow, incluyendo el valor, la función onChange, la longitud máxima y la longitud actual de la descripción.
  * @returns Elemento JSX que representa una fila de descripción de un hechizo.
  */
-export function SpellDescriptionRow({
-  value,
-  onChange,
-  maxLength,
-  length,
-}: {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+import type { TextareaHTMLAttributes } from "react";
+
+interface SpellDescriptionRowProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength: number;
   length: number;
-}) {
+}
+
+export function SpellDescriptionRow({
+  maxLength,
+  length,
+  ...textareaProps
+}: SpellDescriptionRowProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor="description" className="text-foreground">
@@ -24,13 +25,11 @@ export function SpellDescriptionRow({
       </Label>
       <Textarea
         id="description"
-        value={value}
-        onChange={onChange}
-        placeholder="Una brillante estría sale de tu dedo apuntador hacia un punto que elijas..."
         required
         rows={4}
         maxLength={maxLength}
         className="bg-input border-border resize-none max-h-40 overflow-y-auto"
+        {...textareaProps}
       />
       <div className="flex justify-end text-xs text-muted-foreground">
         {length}/{maxLength}
