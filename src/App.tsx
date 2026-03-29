@@ -258,7 +258,7 @@ export function App() {
                 page-break-after: always;
                 width: 210mm;
                 height: 297mm;
-                padding: 10mm;
+                padding: 0;
                 box-sizing: border-box;
               }
               .print-page:last-child {

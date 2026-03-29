@@ -160,7 +160,12 @@
     margin: 0;
   }
 
+  html {
+    font-size: 120%;
+  }
+
   body {
+    margin: 0;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
@@ -173,8 +178,10 @@
     page-break-after: always;
     width: 210mm;
     height: 297mm;
-    padding: 10mm;
+    padding: 0;
     box-sizing: border-box;
+    /* Tamaño relativo adicional si hace falta afinar más */
+    font-size: 1em;
     background: #f5f0e6 !important;
   }
 
