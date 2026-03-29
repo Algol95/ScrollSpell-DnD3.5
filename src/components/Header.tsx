@@ -96,7 +96,7 @@ export function Header({
                   <h1 className="text-lg sm:text-xl font-bold text-foreground tracking-wide truncate">
                     {title}
                   </h1>
-                  <Pencil className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  <Pencil className="h-4 w-4 text-muted-foreground opacity-50 group-hover:opacity-100 hover:text-gold transition" />
                 </div>
               )}
               <p className="text-xs text-muted-foreground">
