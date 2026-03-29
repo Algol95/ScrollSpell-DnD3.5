@@ -120,10 +120,10 @@ export function Form({
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
+    <div className="bg-card border border-border rounded-lg p-4 sm:p-6">
+      <div className="flex items-center gap-3 mb-4 sm:mb-6">
         <ScrollText className="h-6 w-6 text-gold" />
-        <h2 className="text-xl font-semibold text-foreground">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground">
           {editingMeta ? "Editar Hechizo" : "Inscribir Hechizo"}
         </h2>
         <span className="ml-auto text-sm text-muted-foreground">
@@ -146,7 +146,7 @@ export function Form({
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="level" className="text-foreground">
               Nivel *
@@ -190,7 +190,7 @@ export function Form({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="castingTime" className="text-foreground">
               Tiempo de Lanzamiento *
@@ -271,7 +271,7 @@ export function Form({
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="savingThrow" className="text-foreground">
               Tirada de Salvación

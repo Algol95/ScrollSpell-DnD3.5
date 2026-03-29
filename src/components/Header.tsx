@@ -64,10 +64,10 @@ export function Header({
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Logo and Title */}
           <div className="flex items-center gap-3 min-w-0">
-            <BookOpen className="h-8 w-8 text-gold shrink-0" />
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-gold shrink-0" />
             <div className="min-w-0">
               {isEditing ? (
                 <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export function Header({
                   className="flex items-center gap-2 group cursor-pointer"
                   onClick={() => setIsEditing(true)}
                 >
-                  <h1 className="text-xl font-bold text-foreground tracking-wide truncate">
+                  <h1 className="text-lg sm:text-xl font-bold text-foreground tracking-wide truncate">
                     {title}
                   </h1>
                   <Pencil className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
@@ -105,7 +105,7 @@ export function Header({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-between sm:justify-center">
             <Button
               variant="outline"
               size="icon"
@@ -116,14 +116,14 @@ export function Header({
               <ChevronLeft className="h-4 w-4 shrink-0" />
             </Button>
 
-            <div className="flex items-center gap-1 px-3">
+            <div className="flex items-center gap-1 px-2 sm:px-3">
               <Scroll className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="text-sm text-foreground font-medium whitespace-nowrap">
                 {currentPage} / {totalPages}
               </span>
             </div>
 
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden md:flex items-center gap-1 flex-wrap">
               {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
                 let pageNum: number;
                 if (totalPages <= 7) {
@@ -164,7 +164,7 @@ export function Header({
           <Button
             onClick={onGeneratePDF}
             disabled={isGeneratingPDF}
-            className="bg-gold text-ink hover:bg-gold/90"
+            className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center"
           >
             <Download className="h-4 w-4 mr-2 shrink-0" />
             <span className="hidden sm:inline">

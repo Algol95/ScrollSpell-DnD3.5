@@ -205,7 +205,7 @@ export function App() {
         isGeneratingPDF={isGeneratingPDF}
       />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-6">
             <div className="flex items-center justify-between">

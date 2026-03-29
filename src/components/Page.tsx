@@ -28,7 +28,7 @@ export function Page({
 
   return (
     <div
-      className="relative bg-parchment rounded-sm shadow-lg overflow-hidden group/page"
+      className="relative bg-parchment rounded-sm shadow-lg overflow-hidden group/page grimorio-page"
       style={{
         aspectRatio: "210 / 297",
         backgroundImage: `
