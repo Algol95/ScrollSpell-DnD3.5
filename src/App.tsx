@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
@@ -46,14 +45,18 @@ const saveToStorage = (data: SpellbookData) => {
 };
 
 export function App() {
-  const [pages, setPages] = useState<PageType[]>([createEmptyPage(1)]);
-  const [title, setTitle] = useState("Grimorio Arcano");
+  const stored = loadFromStorage();
+  const [pages, setPages] = useState<PageType[]>(
+    stored && stored.pages.length > 0 ? stored.pages : [createEmptyPage(1)],
+  );
+  const [title, setTitle] = useState(stored ? stored.title : "Grimorio Arcano");
 
   // Calcula el total de páginas teóricas según el nivel de los hechizos
   const theoreticalPages = pages.reduce(
     (acc, page) =>
-      acc + page.spells.reduce((sum, spell) => sum + Math.max(1, spell.level), 0),
-    0
+      acc +
+      page.spells.reduce((sum, spell) => sum + Math.max(1, spell.level), 0),
+    0,
   );
   const maxTheoreticalPages = 100;
   const isOverTheoreticalLimit = theoreticalPages > maxTheoreticalPages;
@@ -68,12 +71,8 @@ export function App() {
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const stored = loadFromStorage();
-    if (stored) {
-      setTitle(stored.title);
-      setPages(stored.pages.length > 0 ? stored.pages : [createEmptyPage(1)]);
-    }
-    setIsLoaded(true);
+    const timeout = setTimeout(() => setIsLoaded(true), 0);
+    return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
@@ -236,9 +235,8 @@ export function App() {
       />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
-
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="space-y-6 lg:col-span-2">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -250,8 +248,10 @@ export function App() {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-xs font-semibold px-2 py-1 rounded ${isOverTheoreticalLimit ? 'bg-destructive/10 text-destructive border border-destructive' : 'bg-muted text-muted-foreground'}`}
-                  title="Páginas teóricas según reglas oficiales de D&D 3.5">
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded ${isOverTheoreticalLimit ? "bg-destructive/10 text-destructive border border-destructive" : "bg-muted text-muted-foreground"}`}
+                  title="Páginas teóricas según reglas oficiales de D&D 3.5"
+                >
                   Páginas on-rol: {theoreticalPages} / {maxTheoreticalPages}
                 </span>
                 {isOverTheoreticalLimit && (

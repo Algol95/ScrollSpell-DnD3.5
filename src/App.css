@@ -180,7 +180,6 @@
     height: 297mm;
     padding: 0;
     box-sizing: border-box;
-    /* Tamaño relativo adicional si hace falta afinar más */
     font-size: 1em;
     background: #f5f0e6 !important;
   }
@@ -190,7 +189,6 @@
   }
 }
 
-/* Responsive page typography (solo pantalla, no impresión) */
 @media (max-width: 640px) {
   .grimorio-page {
     /* Escala general menor en móvil para que la vista previa se acerque al PDF */

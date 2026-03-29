@@ -60,34 +60,38 @@ export function Form({
   useEffect(() => {
     if (editingSpell) {
       const { spell, pageId } = editingSpell;
-      setFormData({
-        name: spell.name,
-        level: spell.level.toString(),
-        school: spell.school,
-        castingTime: spell.castingTime,
-        range: spell.range,
-        components: spell.components,
-        duration: spell.duration,
-        description: spell.description,
-        target: spell.target ?? "",
-        savingThrow: spell.savingThrow ?? "",
-        spellResistance: spell.spellResistance ?? "",
+      Promise.resolve().then(() => {
+        setFormData({
+          name: spell.name,
+          level: spell.level.toString(),
+          school: spell.school,
+          castingTime: spell.castingTime,
+          range: spell.range,
+          components: spell.components,
+          duration: spell.duration,
+          description: spell.description,
+          target: spell.target ?? "",
+          savingThrow: spell.savingThrow ?? "",
+          spellResistance: spell.spellResistance ?? "",
+        });
+        setEditingMeta({ pageId, id: spell.id });
       });
-      setEditingMeta({ pageId, id: spell.id });
     } else {
-      setEditingMeta(null);
-      setFormData({
-        name: "",
-        level: "0",
-        school: "",
-        castingTime: "",
-        range: "",
-        components: "",
-        duration: "",
-        description: "",
-        target: "",
-        savingThrow: "",
-        spellResistance: "",
+      Promise.resolve().then(() => {
+        setEditingMeta(null);
+        setFormData({
+          name: "",
+          level: "0",
+          school: "",
+          castingTime: "",
+          range: "",
+          components: "",
+          duration: "",
+          description: "",
+          target: "",
+          savingThrow: "",
+          spellResistance: "",
+        });
       });
     }
   }, [editingSpell]);
