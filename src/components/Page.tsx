@@ -66,7 +66,7 @@ export function Page({
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-ink/40 italic z-10">
         &#x2014; {page.pageNumber} &#x2014;
       </div>
-      <div className="absolute bottom-6 right-6 text-xs text-ink/30 z-10 select-none px-2 italic">
+      <div className="absolute bottom-6 right-6 text-[5px] lg:text-sm text-ink/30 z-10 select-none px-2 italic">
         Generado con{" "}
         <a
           href="https://spellbookgenerator.netlify.app"
