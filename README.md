@@ -1,73 +1,75 @@
-# React + TypeScript + Vite
+# ScrollSpell DnD
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ScrollSpell DnD es una aplicación web desarrollada en React + TypeScript que permite a jugadores y Dungeon Masters de Dungeons & Dragons 3.5 gestionar, crear e imprimir grimorios de hechizos personalizados de manera visual, rápida y flexible.
 
-Currently, two official plugins are available:
+## Características principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Gestión de Grimorios**: Crea, edita y elimina páginas de tu grimorio, cada una con un único hechizo, siguiendo la lógica de los libros de conjuros de D&D 3.5.
+- **Formulario inteligente**: Añade y edita hechizos con un formulario intuitivo, validación de campos y autocompletado de escuelas y niveles.
+- **Cálculo de páginas on-rol**: Calcula automáticamente el número de páginas teóricas según el nivel de los hechizos, mostrando advertencias si excedes el límite oficial.
+- **Vista previa y navegación**: Visualiza tu grimorio en tiempo real, navega entre páginas y selecciona fácilmente el hechizo a editar.
+- **Impresión y exportación**: Exporta tu grimorio a PDF listo para imprimir, con formato optimizado para A4.
+- **Persistencia local**: Todos los datos se guardan automáticamente en el navegador, sin necesidad de registro ni conexión a internet.
+- **UI moderna y accesible**: Interfaz responsiva, accesible y agradable, con soporte para temas y atajos de teclado.
 
-## React Compiler
+## Tecnologías utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/) para desarrollo ultrarrápido
+- [Tailwind CSS](https://tailwindcss.com/) para estilos modernos y personalizables
+- [Lucide React](https://lucide.dev/) para iconografía
+- [react-to-print](https://github.com/gregnb/react-to-print) para exportación a PDF
 
-## Expanding the ESLint configuration
+## Estructura del proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── ui/           # Componentes de UI reutilizables
+│   │   ├── form/         # Subcomponentes del formulario de hechizos
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Page.tsx
+│   │   └── Form.tsx
+│   ├── hooks/            # Hooks personalizados para lógica de negocio
+│   ├── assets/
+│   ├── App.tsx           # Componente principal
+│   └── main.tsx
+├── lib/
+│   └── types.ts          # Tipos y constantes de dominio
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Instalación y uso
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clona el repositorio**
+   ```bash
+   git clone https://github.com/tuusuario/scrollspell-dnd.git
+   cd scrollspell-dnd
+   ```
+2. **Instala las dependencias**
+   ```bash
+   npm install
+   ```
+3. **Inicia el servidor de desarrollo**
+   ```bash
+   npm run dev
+   ```
+4. **Abre la app**
+   Visita [http://localhost:5173](http://localhost:5173) en tu navegador.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Autoría
+
+- **Desarrollo principal:**
+  - Ángel Aragón
+    - [GitHub](https://github.com/Algol95)
+    - [LinkedIn](https://www.linkedin.com/in/angel-dev-aragon)
+    <!-- - [Portfolio](#) -->
+
+---
+
+© 2026 ScrollSpell DnD. Proyecto open source bajo licencia MIT.
