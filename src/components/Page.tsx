@@ -63,8 +63,19 @@ export function Page({
       <div className="absolute bottom-5 left-5 w-10 h-10 border-b-2 border-l-2 border-gold/40" />
       <div className="absolute bottom-5 right-5 w-10 h-10 border-b-2 border-r-2 border-gold/40" />
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-ink/40 font-serif italic z-10">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-ink/40 italic z-10">
         &#x2014; {page.pageNumber} &#x2014;
+      </div>
+      <div className="absolute bottom-6 right-6 text-xs text-ink/30 z-10 select-none px-2 italic">
+        Generado con{" "}
+        <a
+          href="https://spellbookgenerator.netlify.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-gold/80"
+        >
+          spellbookgenerator.netlify.app
+        </a>
       </div>
 
       <div className="relative p-6 h-full flex flex-col z-10">
@@ -86,7 +97,7 @@ export function Page({
               <p className="text-sm italic font-serif text-center">
                 Esta pagina aguarda los secretos arcanos...
               </p>
-              <p className="text-xs mt-1 font-serif">
+              <p className="text-xs mt-1 font-serif italic">
                 Inscribe tu primer hechizo
               </p>
             </div>
