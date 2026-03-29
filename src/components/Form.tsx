@@ -1,19 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import { Label } from "../components/ui/Label";
-import { Textarea } from "../components/ui/Textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/Select";
-import { SPELL_SCHOOLS, SPELL_LEVELS, type Spell } from "../../lib/types";
 import { ScrollText, Sparkles } from "lucide-react";
+import { SPELL_SCHOOLS, type Spell } from "../../lib/types";
+import { useSpellForm } from "../hooks/useSpellForm";
+import { SpellLevelSchoolRow } from "./form/SpellLevelSchoolRow";
+import { SpellInputRow } from "./form/SpellInputRow";
+import { SpellGridRow } from "./form/SpellGridRow";
+import { SpellDescriptionRow } from "./form/SpellDescriptionRow";
 
 interface SpellFormProps {
   onAddSpell: (spell: Spell) => void;
@@ -25,79 +19,22 @@ interface SpellFormProps {
 const DESCRIPTION_MAX_LENGTH = 3000;
 
 /**
- * Componente de formulario para inscribir un hechizo. Permite ingresar los detalles del hechizo y enviarlos mediante la función onAddSpell.
- * @param onAddSpell Función que se llama al enviar el formulario para agregar un nuevo hechizo.
- * @param onUpdateSpell Función que se llama al enviar el formulario para actualizar un hechizo existente.
- * @param currentPageNumber Número de página actual, utilizado para mostrar en el encabezado del formulario.
- * @param editingSpell Objeto opcional que contiene el hechizo a editar y su página correspondiente. Si se proporciona, el formulario se rellenará con los datos del hechizo para su edición.
+ * Componente de formulario para inscribir o editar un hechizo. Permite a los usuarios ingresar detalles del hechizo, como nombre, nivel, escuela, tiempo de lanzamiento, alcance, componentes, duración, descripción, objetivo/área, tirada de salvación y resistencia a conjuros. El formulario valida que se completen los campos obligatorios antes de permitir la inscripción o actualización del hechizo en el grimorio.
+ * @param param0 Props del componente Form, incluyendo las funciones para agregar y actualizar hechizos, el número de página actual y el hechizo que se está editando (si aplica).
  * @returns Elemento JSX que representa el formulario de hechizo.
  */
+
 export function Form({
   onAddSpell,
   onUpdateSpell,
   currentPageNumber,
   editingSpell,
 }: SpellFormProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    level: "0",
-    school: "",
-    castingTime: "",
-    range: "",
-    components: "",
-    duration: "",
-    description: "",
-    target: "",
-    savingThrow: "",
-    spellResistance: "",
+  const { formData, setFormData, editingMeta, resetForm } = useSpellForm({
+    editingSpell,
   });
 
-  const [editingMeta, setEditingMeta] = useState<{
-    pageId: string;
-    id: string;
-  } | null>(null);
-
   const descriptionLength = formData.description.length;
-
-  // Rellenar el formulario cuando recibimos un hechizo en edición
-  useEffect(() => {
-    if (editingSpell) {
-      const { spell, pageId } = editingSpell;
-      Promise.resolve().then(() => {
-        setFormData({
-          name: spell.name,
-          level: spell.level.toString(),
-          school: spell.school,
-          castingTime: spell.castingTime,
-          range: spell.range,
-          components: spell.components,
-          duration: spell.duration,
-          description: spell.description,
-          target: spell.target ?? "",
-          savingThrow: spell.savingThrow ?? "",
-          spellResistance: spell.spellResistance ?? "",
-        });
-        setEditingMeta({ pageId, id: spell.id });
-      });
-    } else {
-      Promise.resolve().then(() => {
-        setEditingMeta(null);
-        setFormData({
-          name: "",
-          level: "0",
-          school: "",
-          castingTime: "",
-          range: "",
-          components: "",
-          duration: "",
-          description: "",
-          target: "",
-          savingThrow: "",
-          spellResistance: "",
-        });
-      });
-    }
-  }, [editingSpell]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,19 +60,7 @@ export function Form({
         ...baseSpell,
       };
       onAddSpell(spell);
-      setFormData({
-        name: "",
-        level: "0",
-        school: "",
-        castingTime: "",
-        range: "",
-        components: "",
-        duration: "",
-        description: "",
-        target: "",
-        savingThrow: "",
-        spellResistance: "",
-      });
+      resetForm();
     }
   };
 
@@ -152,198 +77,88 @@ export function Form({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name" className="text-foreground">
-            Nombre del Hechizo *
-          </Label>
-          <Input
-            id="name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Bola de Fuego"
-            required
-            className="bg-input border-border"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="level" className="text-foreground">
-              Nivel *
-            </Label>
-            <Select
-              value={formData.level}
-              onValueChange={(v) => setFormData({ ...formData, level: v })}
-            >
-              <SelectTrigger className="bg-input border-border">
-                <SelectValue placeholder="Nivel" />
-              </SelectTrigger>
-              <SelectContent>
-                {SPELL_LEVELS.map((level) => (
-                  <SelectItem key={level} value={level.toString()}>
-                    {level === 0 ? "Truco (0)" : `Nivel ${level}`}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="school" className="text-foreground">
-              Escuela *
-            </Label>
-            <Select
-              value={formData.school}
-              onValueChange={(v) => setFormData({ ...formData, school: v })}
-            >
-              <SelectTrigger className="bg-input border-border">
-                <SelectValue placeholder="Escuela" />
-              </SelectTrigger>
-              <SelectContent>
-                {SPELL_SCHOOLS.map((school) => (
-                  <SelectItem key={school} value={school}>
-                    {school}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="castingTime" className="text-foreground">
-              Tiempo de Lanzamiento *
-            </Label>
-            <Input
-              id="castingTime"
-              value={formData.castingTime}
-              onChange={(e) =>
-                setFormData({ ...formData, castingTime: e.target.value })
-              }
-              placeholder="1 acción estándar"
-              required
-              className="bg-input border-border"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="range" className="text-foreground">
-              Alcance *
-            </Label>
-            <Input
-              id="range"
-              value={formData.range}
-              onChange={(e) =>
-                setFormData({ ...formData, range: e.target.value })
-              }
-              placeholder="Largo (120m)"
-              required
-              className="bg-input border-border"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="components" className="text-foreground">
-            Componentes *
-          </Label>
-          <Input
-            id="components"
-            value={formData.components}
-            onChange={(e) =>
-              setFormData({ ...formData, components: e.target.value })
-            }
-            placeholder="V, S, M (guano de murciélago)"
-            required
-            className="bg-input border-border"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="duration" className="text-foreground">
-            Duración *
-          </Label>
-          <Input
-            id="duration"
-            value={formData.duration}
-            onChange={(e) =>
-              setFormData({ ...formData, duration: e.target.value })
-            }
-            placeholder="Instantáneo"
-            required
-            className="bg-input border-border"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="target" className="text-foreground">
-            Objetivo/Área
-          </Label>
-          <Input
-            id="target"
-            value={formData.target}
-            onChange={(e) =>
-              setFormData({ ...formData, target: e.target.value })
-            }
-            placeholder="Esfera de 6m de radio"
-            className="bg-input border-border"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="savingThrow" className="text-foreground">
-              Tirada de Salvación
-            </Label>
-            <Input
-              id="savingThrow"
-              value={formData.savingThrow}
-              onChange={(e) =>
-                setFormData({ ...formData, savingThrow: e.target.value })
-              }
-              placeholder="Reflejos (mitad)"
-              className="bg-input border-border"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="spellResistance" className="text-foreground">
-              Resistencia a Conjuros
-            </Label>
-            <Input
-              id="spellResistance"
-              value={formData.spellResistance}
-              onChange={(e) =>
-                setFormData({ ...formData, spellResistance: e.target.value })
-              }
-              placeholder="Sí"
-              className="bg-input border-border"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description" className="text-foreground">
-            Descripción *
-          </Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            placeholder="Una brillante estría sale de tu dedo apuntador hacia un punto que elijas..."
-            required
-            rows={4}
-            maxLength={DESCRIPTION_MAX_LENGTH}
-            className="bg-input border-border resize-none max-h-40 overflow-y-auto"
-          />
-          <div className="flex justify-end text-xs text-muted-foreground">
-            {descriptionLength}/{DESCRIPTION_MAX_LENGTH}
-          </div>
-        </div>
-
+        <SpellInputRow
+          id="name"
+          label="Nombre del Hechizo"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="Bola de Fuego"
+          required
+        />
+        <SpellLevelSchoolRow
+          level={formData.level}
+          school={formData.school}
+          setLevel={(v) => setFormData({ ...formData, level: v })}
+          setSchool={(v) => setFormData({ ...formData, school: v })}
+          spellSchools={[...SPELL_SCHOOLS]}
+        />
+        <SpellGridRow
+          leftId="castingTime"
+          leftLabel="Tiempo de Lanzamiento *"
+          leftValue={formData.castingTime}
+          leftOnChange={(e) =>
+            setFormData({ ...formData, castingTime: e.target.value })
+          }
+          leftPlaceholder="1 acción estándar"
+          rightId="range"
+          rightLabel="Alcance *"
+          rightValue={formData.range}
+          rightOnChange={(e) =>
+            setFormData({ ...formData, range: e.target.value })
+          }
+          rightPlaceholder="Largo (120m)"
+        />
+        <SpellInputRow
+          id="components"
+          label="Componentes"
+          value={formData.components}
+          onChange={(e) =>
+            setFormData({ ...formData, components: e.target.value })
+          }
+          placeholder="V, S, M (guano de murciélago)"
+          required
+        />
+        <SpellInputRow
+          id="duration"
+          label="Duración"
+          value={formData.duration}
+          onChange={(e) =>
+            setFormData({ ...formData, duration: e.target.value })
+          }
+          placeholder="Instantáneo"
+          required
+        />
+        <SpellInputRow
+          id="target"
+          label="Objetivo/Área"
+          value={formData.target}
+          onChange={(e) => setFormData({ ...formData, target: e.target.value })}
+          placeholder="Esfera de 6m de radio"
+        />
+        <SpellGridRow
+          leftId="savingThrow"
+          leftLabel="Tirada de Salvación"
+          leftValue={formData.savingThrow}
+          leftOnChange={(e) =>
+            setFormData({ ...formData, savingThrow: e.target.value })
+          }
+          leftPlaceholder="Reflejos (mitad)"
+          rightId="spellResistance"
+          rightLabel="Resistencia a Conjuros"
+          rightValue={formData.spellResistance}
+          rightOnChange={(e) =>
+            setFormData({ ...formData, spellResistance: e.target.value })
+          }
+          rightPlaceholder="Sí"
+        />
+        <SpellDescriptionRow
+          value={formData.description}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
+          maxLength={DESCRIPTION_MAX_LENGTH}
+          length={descriptionLength}
+        />
         <Button
           type="submit"
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90"

@@ -1,197 +1,53 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import React, { useRef } from "react";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
 import { Form } from "./components/Form";
 import { Button } from "./components/ui/Button";
 import { Footer } from "./components/Footer";
 import { Plus } from "lucide-react";
-import type { Spell, SpellbookPage as PageType } from "../lib/types";
 import { useReactToPrint } from "react-to-print";
+import { useSpellbookPages } from "./hooks/useSpellbookPages";
+import { useSpellbookStorage } from "./hooks/useSpellbookStorage";
+import { ArchmageTips } from "./components/ArchmageTips";
 import "./App.css";
 
-const STORAGE_KEY = "grimorio_arcano_data";
-
-interface SpellbookData {
-  title: string;
-  pages: PageType[];
-}
-
-const createEmptyPage = (pageNumber: number): PageType => ({
-  id: crypto.randomUUID(),
-  pageNumber,
-  spells: [],
-});
-
-const loadFromStorage = (): SpellbookData | null => {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-  } catch (e) {
-    console.error("Error loading from localStorage:", e);
-  }
-  return null;
-};
-
-const saveToStorage = (data: SpellbookData) => {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (e) {
-    console.error("Error saving to localStorage:", e);
-  }
-};
-
+/**
+ * Componente principal de la aplicación de grimorio de hechizos. Gestiona el estado del grimorio, incluyendo las páginas, los hechizos y el título. También maneja la generación de PDF y la navegación entre páginas.
+ * @returns JSX.Element que representa la aplicación completa.
+ */
 export function App() {
-  const stored = loadFromStorage();
-  const [pages, setPages] = useState<PageType[]>(
-    stored && stored.pages.length > 0 ? stored.pages : [createEmptyPage(1)],
-  );
-  const [title, setTitle] = useState(stored ? stored.title : "Grimorio Arcano");
+  const {
+    pages,
+    currentPageIndex,
+    setCurrentPageIndex,
+    editingSpell,
+    setEditingSpell,
+    handleAddSpell,
+    handleUpdateSpell,
+    handleDeleteSpell,
+    handleAddPage,
+    handleDeletePage,
+    handlePageChange,
+    isLoaded,
+    title,
+    setTitle,
+    theoreticalPages,
+    maxTheoreticalPages,
+    isOverTheoreticalLimit,
+  } = useSpellbookPages();
 
-  // Calcula el total de páginas teóricas según el nivel de los hechizos
-  const theoreticalPages = pages.reduce(
-    (acc, page) =>
-      acc +
-      page.spells.reduce((sum, spell) => sum + Math.max(1, spell.level), 0),
-    0,
+  // Handler para el cambio de título del grimorio
+  const handleTitleChange = React.useCallback(
+    (newTitle: string) => {
+      setTitle(newTitle);
+    },
+    [setTitle],
   );
-  const maxTheoreticalPages = 100;
-  const isOverTheoreticalLimit = theoreticalPages > maxTheoreticalPages;
 
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [editingSpell, setEditingSpell] = useState<{
-    pageId: string;
-    spell: Spell;
-  } | null>(null);
+  useSpellbookStorage({ title, pages, isLoaded });
+
+  const [isGeneratingPDF, setIsGeneratingPDF] = React.useState(false);
   const printRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setIsLoaded(true), 0);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  useEffect(() => {
-    if (isLoaded) {
-      saveToStorage({ title, pages });
-    }
-  }, [title, pages, isLoaded]);
-
-  const handleAddSpell = useCallback(
-    (spell: Spell) => {
-      setPages((prev) => {
-        const newPages = [...prev];
-        const targetPage = newPages[currentPageIndex];
-
-        if (targetPage.spells.length >= 1) {
-          const newPage = createEmptyPage(newPages.length + 1);
-          newPage.spells.push(spell);
-          newPages.push(newPage);
-          setTimeout(() => setCurrentPageIndex(newPages.length - 1), 0);
-        } else {
-          targetPage.spells.push(spell);
-        }
-
-        return newPages;
-      });
-      setEditingSpell(null);
-    },
-    [currentPageIndex],
-  );
-
-  const handleUpdateSpell = useCallback(
-    (pageId: string, updatedSpell: Spell) => {
-      setPages((prev) =>
-        prev.map((page) =>
-          page.id === pageId
-            ? {
-                ...page,
-                spells: page.spells.map((s) =>
-                  s.id === updatedSpell.id ? updatedSpell : s,
-                ),
-              }
-            : page,
-        ),
-      );
-      setEditingSpell(null);
-    },
-    [],
-  );
-
-  const handleDeleteSpell = useCallback((pageId: string, spellId: string) => {
-    setPages((prev) =>
-      prev.map((page) =>
-        page.id === pageId
-          ? { ...page, spells: page.spells.filter((s) => s.id !== spellId) }
-          : page,
-      ),
-    );
-    setEditingSpell((current) =>
-      current && current.pageId === pageId && current.spell.id === spellId
-        ? null
-        : current,
-    );
-  }, []);
-
-  const handleAddPage = useCallback(() => {
-    setPages((prev) => {
-      const newPages = [...prev, createEmptyPage(prev.length + 1)];
-      setCurrentPageIndex(newPages.length - 1);
-      return newPages;
-    });
-  }, []);
-
-  const handleDeletePage = useCallback((pageId: string) => {
-    setPages((prev) => {
-      if (prev.length <= 1) return prev;
-      const deleteIndex = prev.findIndex((p) => p.id === pageId);
-      if (deleteIndex === -1) return prev;
-
-      // Ajustar el índice de página actual antes de eliminar
-      setCurrentPageIndex((prevIndex) => {
-        if (prevIndex === deleteIndex) {
-          // Si es la primera, quedarse en la 0; si no, ir a la anterior
-          return deleteIndex === 0 ? 0 : prevIndex - 1;
-        }
-        if (prevIndex > deleteIndex) return prevIndex - 1;
-        return prevIndex;
-      });
-
-      // Limpiar edición si corresponde
-      setEditingSpell((current) => {
-        if (
-          current &&
-          prev[deleteIndex] &&
-          current.pageId === prev[deleteIndex].id
-        ) {
-          return null;
-        }
-        return current;
-      });
-
-      const newPages = prev
-        .filter((p) => p.id !== pageId)
-        .map((page, idx) => ({ ...page, pageNumber: idx + 1 }));
-      return newPages;
-    });
-  }, []);
-
-  const handlePageChange = useCallback(
-    (pageNum: number) => {
-      if (pageNum >= 1 && pageNum <= pages.length) {
-        setCurrentPageIndex(pageNum - 1);
-      }
-    },
-    [pages.length],
-  );
-
-  const handleTitleChange = useCallback((newTitle: string) => {
-    setTitle(newTitle);
-  }, []);
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -204,7 +60,7 @@ export function App() {
     },
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     const pageElement = document.getElementById(`page-${currentPageIndex}`);
     if (pageElement) {
       pageElement.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -319,29 +175,7 @@ export function App() {
               editingSpell={editingSpell}
             />
 
-            <div className="mt-6 p-4 bg-secondary/50 rounded-lg border border-border">
-              <h3 className="text-sm font-semibold text-foreground mb-2">
-                Consejos del Archimago
-              </h3>
-              <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                <li>Cada pagina contiene un unico hechizo</li>
-                <li>Haz clic en una pagina para seleccionarla</li>
-                <li>Pasa el raton sobre un hechizo para eliminarlo</li>
-                <li>El grimorio se guarda automaticamente</li>
-                <li>Puedes editar el titulo en la cabecera</li>
-                <li>
-                  El número de páginas teóricas ON-ROL se calcula según el nivel
-                  de los hechizos, siguiendo las reglas oficiales de D&D 3.5.
-                </li>
-                <li>
-                  Si excedes el límite oficial de páginas, se mostrará una
-                  advertencia para ayudarte a mantener tu grimorio dentro de las
-                  reglas. Se puede seguir añadiendo hechizos sin restricciones
-                  para permitir flexibilidad en la creación de tu grimorio y
-                  ajustarte a las reglas de tu master.
-                </li>
-              </ul>
-            </div>
+            <ArchmageTips />
           </div>
         </div>
       </main>
