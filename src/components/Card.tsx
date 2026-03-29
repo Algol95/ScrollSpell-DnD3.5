@@ -34,7 +34,7 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
 
       {/* Header */}
       <div className="text-center pb-3 mb-3 border-b-2 border-stone-400/30">
-        <h3 className="font-sans font-bold text-ink text-xl leading-tight">
+        <h3 className="font-bold text-ink text-xl leading-tight quintessential-regular">
           {spell.name}
         </h3>
         {spell.subtitle && (
