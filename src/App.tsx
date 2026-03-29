@@ -174,10 +174,9 @@ export function App() {
               currentPageNumber={currentPageIndex + 1}
               editingSpell={editingSpell}
             />
-
-            <ArchmageTips />
           </div>
         </div>
+        <ArchmageTips />
       </main>
 
       <div className="hidden">
