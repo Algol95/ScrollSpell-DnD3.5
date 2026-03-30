@@ -63,7 +63,7 @@ export function Page({
       <div className="absolute bottom-5 left-5 w-10 h-10 border-b-2 border-l-2 border-gold/40" />
       <div className="absolute bottom-5 right-5 w-10 h-10 border-b-2 border-r-2 border-gold/40" />
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-ink/40 italic z-10">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-ink/40 italic z-10 font-fondamento font-bold">
         &#x2014; {page.pageNumber} &#x2014;
       </div>
       <div className="absolute bottom-6 right-6 text-[5px] lg:text-sm text-ink/30 z-10 select-none px-2 italic">
@@ -82,7 +82,7 @@ export function Page({
         <div className="text-center mb-4">
           <div className="inline-block">
             <span className="text-lg text-gold">&#x2726;</span>
-            <span className="mx-2 text-xs font-semibold text-ink/50 uppercase tracking-[0.2em]">
+            <span className="mx-2 font-semibold text-ink/50 uppercase tracking-widest font-fondamento">
               {title}
             </span>
             <span className="text-lg text-gold">&#x2726;</span>

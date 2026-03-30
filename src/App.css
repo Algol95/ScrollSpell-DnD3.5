@@ -1,6 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Fondamento:ital@0;1&family=Moon+Dance&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
+
+.font-moon-dance {
+  font-family: "Moon Dance", serif;
+}
+
+.font-fondamento {
+  font-family: "Fondamento", serif;
+}
 
 :root {
   --background: oklch(0.18 0.02 45);
@@ -200,17 +209,23 @@
   }
 
   .grimorio-page h2,
-  .grimorio-page h3,
-  .grimorio-page h4 {
-    font-size: 0.45rem;
+  .grimorio-page h3 {
+    font-size: 0.7rem;
   }
 
+  .grimorio-page h4 {
+    font-size: 0.35rem;
+  }
   .grimorio-page p,
   .grimorio-page span,
   .grimorio-page li {
     font-size: 0.3rem;
     margin-top: 0.05rem;
     margin-bottom: 0.05rem;
+  }
+
+  .grimorio-page p {
+    font-size: 0.45rem;
   }
 
   /* Comprimir espacios verticales entre bloques en la página del grimorio */

@@ -18,7 +18,7 @@ interface SpellFormProps {
   editingSpell?: { pageId: string; spell: Spell } | null;
 }
 
-const DESCRIPTION_MAX_LENGTH = 3000;
+const DESCRIPTION_MAX_LENGTH = 1500;
 
 type SpellFormData = {
   name: string;

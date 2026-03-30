@@ -34,15 +34,15 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
 
       {/* Header */}
       <div className="text-center pb-3 mb-3 border-b-2 border-stone-400/30">
-        <h3 className="font-bold text-ink text-xl leading-tight quintessential-regular">
+        <h3 className="font-extrabold text-ink text-2xl leading-tight font-fondamento italic">
           {spell.name}
         </h3>
         {spell.subtitle && (
-          <div className="text-ink/50 text-xs font-serif italic mt-0.5">
+          <h4 className="text-ink/50 text-xs font-fondamento italic mt-0.5">
             {spell.subtitle}
-          </div>
+          </h4>
         )}
-        <p className="italic text-ink/60 mt-1 text-sm font-serif">
+        <p className="italic text-ink/60 mt-1 text-sm font-fondamento">
           {spell.school} - Nivel {spell.level}
         </p>
       </div>
@@ -50,53 +50,67 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-ink/90 mb-3 text-xs">
         <div>
-          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
             Tiempo
           </span>
-          <p className="mt-0.5 font-serif">{spell.castingTime}</p>
+          <p className="mt-0.5 font-moon-dance font-bold text-xl">
+            {spell.castingTime}
+          </p>
         </div>
         <div>
-          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
             Alcance
           </span>
-          <p className="mt-0.5 font-serif">{spell.range}</p>
+          <p className="mt-0.5 font-moon-dance font-bold text-xl">
+            {spell.range}
+          </p>
         </div>
         <div>
-          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
             Componentes
           </span>
-          <p className="mt-0.5 font-serif">{spell.components}</p>
+          <p className="mt-0.5 font-moon-dance font-bold text-xl">
+            {spell.components}
+          </p>
         </div>
         <div>
-          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+          <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
             Duracion
           </span>
-          <p className="mt-0.5 font-serif">{spell.duration}</p>
+          <p className="mt-0.5 font-moon-dance font-bold text-xl">
+            {spell.duration}
+          </p>
         </div>
         {spell.target && (
           <div className="col-span-2">
-            <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+            <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
               Objetivo/Area
             </span>
-            <p className="mt-0.5 font-serif">{spell.target}</p>
+            <p className="mt-0.5 font-moon-dance font-bold text-xl">
+              {spell.target}
+            </p>
           </div>
         )}
         {(spell.savingThrow || spell.spellResistance) && (
           <>
             {spell.savingThrow && (
               <div>
-                <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+                <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
                   Salvacion
                 </span>
-                <p className="mt-0.5 font-serif">{spell.savingThrow}</p>
+                <p className="mt-0.5 font-moon-dance font-bold text-xl">
+                  {spell.savingThrow}
+                </p>
               </div>
             )}
             {spell.spellResistance && (
               <div>
-                <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide">
+                <span className="font-semibold text-ink/50 uppercase text-[10px] tracking-wide font-fondamento">
                   R. Conjuros
                 </span>
-                <p className="mt-0.5 font-serif">{spell.spellResistance}</p>
+                <p className="mt-0.5 font-moon-dance text-xl font-bold">
+                  {spell.spellResistance}
+                </p>
               </div>
             )}
           </>
@@ -108,10 +122,10 @@ export function Card({ spell, onDelete, isPrintMode = false }: CardProps) {
 
       {/* Notas del Mago */}
       <div className="flex-1">
-        <h4 className="font-semibold text-ink/50 mb-1 text-[10px] uppercase tracking-wide">
+        <h4 className="font-semibold text-ink/50 mb-1 text-[10px] uppercase tracking-wide font-fondamento">
           Notas del Mago
         </h4>
-        <p className="text-ink/80 leading-relaxed font-serif text-sm whitespace-pre-line">
+        <p className="text-ink/80 leading-relaxed font-moon-dance whitespace-pre-line text-xl font-bold">
           {spell.description}
         </p>
       </div>
