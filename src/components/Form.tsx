@@ -227,6 +227,7 @@ export function Form({
           maxLength={DESCRIPTION_MAX_LENGTH}
           length={descriptionLength}
           {...register("description", { required: true })}
+          placeholder="Redacta el funcionamiento del hechizo e incluso rolea como lo anotaría tu personaje en el rol."
         />
         <Button
           type="submit"

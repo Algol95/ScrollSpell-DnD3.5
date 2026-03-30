@@ -16,6 +16,7 @@ interface SpellDescriptionRowProps extends TextareaHTMLAttributes<HTMLTextAreaEl
 export function SpellDescriptionRow({
   maxLength,
   length,
+  placeholder = "",
   ...textareaProps
 }: SpellDescriptionRowProps) {
   return (
@@ -29,6 +30,7 @@ export function SpellDescriptionRow({
         rows={4}
         maxLength={maxLength}
         className="bg-input border-border resize-none max-h-40 overflow-y-auto"
+        placeholder={placeholder}
         {...textareaProps}
       />
       <div className="flex justify-end text-xs text-muted-foreground">
