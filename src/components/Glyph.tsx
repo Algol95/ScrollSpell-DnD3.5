@@ -37,7 +37,6 @@ const schoolColors: Record<string, string> = {
 };
 
 function normalizeSchoolName(name: string): string {
-  // Quitar acentos y normalizar para coincidir con las claves del mapa
   const noAccents = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return noAccents.trim();
 }
