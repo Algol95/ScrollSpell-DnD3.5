@@ -20,6 +20,8 @@ const schoolSymbols: Record<string, string> = {
     "M50,10 L60,25 L75,10 L70,30 L90,35 L72,45 L85,60 L65,55 L60,75 L50,60 L40,75 L35,55 L15,60 L28,45 L10,35 L30,30 L25,10 L40,25 Z",
   Transmutacion:
     "M50,5 L65,25 L90,25 L72,42 L80,65 L55,52 L50,75 L45,52 L20,65 L28,42 L10,25 L35,25 Z M50,30 A20,20 0 1,1 50,70 A20,20 0 1,1 50,30",
+  Universal:
+    "M50,15 L57.1,32.9 L75,25 L62.9,42.9 L85,50 L62.9,57.1 L75,75 L57.1,67.1 L50,85 L42.9,67.1 L25,75 L37.1,57.1 L15,50 L37.1,42.9 L25,25 L42.9,32.9 Z",
 };
 
 const schoolColors: Record<string, string> = {
@@ -31,6 +33,7 @@ const schoolColors: Record<string, string> = {
   Ilusion: "#6b21a8", // púrpura
   Nigromancia: "#111827", // casi negro
   Transmutacion: "#16a34a", // verde
+  Universal: "#7c6a58", // marrón neutro
 };
 
 function normalizeSchoolName(name: string): string {
