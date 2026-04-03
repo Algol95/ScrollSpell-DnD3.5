@@ -99,7 +99,9 @@
       "The spellbook is saved automatically in the browser's local storage.",
       "You can edit the title in the application header.",
       "The number of in-world theoretical pages is calculated according to spell level, following the official D&D 3.5 rules.",
-      "If you exceed the official page limit, a warning will appear to help keep your spellbook within the rules. You can still keep adding spells without restrictions to preserve flexibility and match your DM's table rules."
+      "If you exceed the official page limit, a warning will appear to help keep your spellbook within the rules. You can still keep adding spells without restrictions to preserve flexibility and match your DM's table rules.",
+      "La generación del PDF puede tardar unos segundos, dependiendo de la cantidad de hechizos y páginas que tengas en tu grimorio. Ten paciencia mientras se prepara tu grimorio para la impresión.",
+      "The PDF generation can take a few seconds, depending on the number of spells and pages in your spellbook. Please be patient while your spellbook is being prepared for printing."
     ]
   },
   "schools": {

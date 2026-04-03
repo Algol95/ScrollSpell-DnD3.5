@@ -99,7 +99,8 @@
       "El grimorio se guarda automáticamente en el almacenamiento local del navegador.",
       "Puedes editar el título en la cabecera de la aplicación.",
       "El número de páginas teóricas on-rol se calcula según el nivel de los hechizos, siguiendo las reglas oficiales de D&D 3.5.",
-      "Si excedes el límite oficial de páginas, se mostrará una advertencia para ayudarte a mantener tu grimorio dentro de las reglas. Se puede seguir añadiendo hechizos sin restricciones para permitir flexibilidad en la creación de tu grimorio y ajustarte a las reglas de tu master."
+      "Si excedes el límite oficial de páginas, se mostrará una advertencia para ayudarte a mantener tu grimorio dentro de las reglas. Se puede seguir añadiendo hechizos sin restricciones para permitir flexibilidad en la creación de tu grimorio y ajustarte a las reglas de tu master.",
+      "La generación del PDF puede tardar unos segundos, dependiendo de la cantidad de hechizos y páginas que tengas en tu grimorio. Ten paciencia mientras se prepara tu grimorio para la impresión."
     ]
   },
   "schools": {
