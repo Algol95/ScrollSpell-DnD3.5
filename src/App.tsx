@@ -12,14 +12,6 @@ import { ArchmageTips } from "./components/ArchmageTips";
 import { useTranslation, isDefaultTitle } from "./i18n-utils";
 import "./App.css";
 
-type Html2PdfModule = {
-  default: (element: HTMLElement) => {
-    set: (options: Record<string, unknown>) => {
-      save: () => Promise<void>;
-    };
-  };
-};
-
 function shouldUseMobilePdfFallback() {
   if (typeof window === "undefined") return false;
 
@@ -29,6 +21,82 @@ function shouldUseMobilePdfFallback() {
     window.matchMedia("(max-width: 768px)").matches;
 
   return isMobileDevice;
+}
+
+function buildPrintWindowMarkup(element: HTMLElement, documentTitle: string) {
+  const styles = Array.from(
+    window.document.querySelectorAll('style, link[rel="stylesheet"]'),
+  )
+    .map((node) => node.outerHTML)
+    .join("\n");
+
+  return `
+    <!doctype html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${documentTitle}</title>
+        ${styles}
+        <style>
+          html, body {
+            margin: 0;
+            padding: 0;
+            background: #f5f0e6;
+          }
+
+          .print-host {
+            display: block;
+            width: 210mm;
+            margin: 0 auto;
+            background: #f5f0e6;
+          }
+
+          .print-container {
+            display: block !important;
+          }
+
+          .print-page {
+            page-break-after: always;
+            width: 210mm;
+            height: 297mm;
+            padding: 0;
+            box-sizing: border-box;
+            background: #f5f0e6;
+          }
+
+          .print-page:last-child {
+            page-break-after: auto;
+          }
+
+          @page {
+            size: A4;
+            margin: 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-host">${element.innerHTML}</div>
+      </body>
+    </html>
+  `;
+}
+
+async function printInIsolatedWindow(element: HTMLElement, title: string) {
+  const printWindow = window.open("", "_blank");
+
+  if (!printWindow) {
+    throw new Error("No se pudo abrir la ventana de impresión.");
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(buildPrintWindowMarkup(element, title));
+  printWindow.document.close();
+
+  await new Promise((resolve) => window.setTimeout(resolve, 500));
+
+  printWindow.focus();
+  printWindow.print();
 }
 
 /**
@@ -94,27 +162,10 @@ export function App() {
 
     try {
       if (shouldUseMobilePdfFallback()) {
-        const html2pdf = (await import("html2pdf.js")) as Html2PdfModule;
-
-        await html2pdf
-          .default(printRef.current)
-          .set({
-            margin: [0, 0, 0, 0],
-            filename: `${title.replace(/\s+/g, "_") || "spellbook"}.pdf`,
-            image: { type: "jpeg", quality: 0.98 },
-            html2canvas: {
-              scale: 2,
-              useCORS: true,
-              backgroundColor: "#f5f0e6",
-            },
-            jsPDF: {
-              unit: "mm",
-              format: "a4",
-              orientation: "portrait",
-            },
-            pagebreak: { mode: ["css", "legacy"] },
-          })
-          .save();
+        await printInIsolatedWindow(
+          printRef.current,
+          title.replace(/\s+/g, "_") || "spellbook",
+        );
 
         return;
       }
