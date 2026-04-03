@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import {
@@ -18,7 +18,7 @@ import {
   Check,
   Languages,
 } from "lucide-react";
-import { useTranslation, type Locale } from "../i18n-utils";
+import { type Locale, useTranslation } from "../i18n-utils";
 
 /**
  * Componente de encabezado del libro de hechizos que incluye el título editable, la navegación de páginas y la generación de PDF. Permite a los usuarios cambiar el título del libro, navegar entre las páginas del libro de hechizos y generar un PDF del contenido. El componente utiliza Tailwind CSS para el estilo y lucide-react para los íconos, proporcionando una interfaz de usuario atractiva y funcional para la gestión del libro de hechizos.
@@ -53,6 +53,10 @@ export function Header({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(title);
 
+  useEffect(() => {
+    setEditValue(title);
+  }, [title]);
+
   const handleSave = () => {
     if (editValue.trim()) {
       onTitleChange(editValue.trim());
@@ -62,7 +66,7 @@ export function Header({
     setIsEditing(false);
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSave();
     } else if (e.key === "Escape") {
@@ -72,10 +76,9 @@ export function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 py-3">
+    <header className="fixed top-0 inset-x-0 sm:sticky sm:top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-md">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {/* Logo and Title */}
           <div className="flex items-center gap-3 min-w-0">
             <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-gold shrink-0" />
             <div className="min-w-0">
@@ -115,18 +118,18 @@ export function Header({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 justify-between sm:justify-center">
+          <div className="grid grid-cols-[2.25rem_minmax(0,1fr)_2.25rem] items-center gap-2 sm:flex sm:items-center sm:justify-center sm:flex-1 sm:max-w-md sm:mx-4">
             <Button
               variant="outline"
               size="icon"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              className="h-8 w-8"
+              className="h-9 w-9"
             >
               <ChevronLeft className="h-4 w-4 shrink-0" />
             </Button>
 
-            <div className="flex items-center gap-1 px-2 sm:px-3">
+            <div className="flex items-center justify-center gap-1 px-2 min-w-0 sm:px-3">
               <Scroll className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="text-sm text-foreground font-medium whitespace-nowrap">
                 {currentPage} / {totalPages}
@@ -165,47 +168,49 @@ export function Header({
               size="icon"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              className="h-8 w-8"
+              className="h-9 w-9"
             >
               <ChevronRight className="h-4 w-4 shrink-0" />
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="w-[130px] sm:w-[150px]">
-              <Select
-                value={locale}
-                onValueChange={(value) => setLocale(value as Locale)}
+          <div className="grid grid-cols-[4rem_minmax(0,1fr)] gap-2 w-full sm:flex sm:w-auto sm:items-center">
+            <Select
+              value={locale}
+              onValueChange={(value) => setLocale(value as Locale)}
+            >
+              <SelectTrigger
+                size="sm"
+                aria-label={messages.header.languageLabel}
+                className="w-full min-w-0 h-9 px-2.5 sm:px-2 bg-background/60 border-border justify-center"
               >
-                <SelectTrigger className="w-full bg-background/60 border-border">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Languages className="h-4 w-4 text-muted-foreground" />
-                    <SelectValue placeholder={messages.header.languageLabel} />
-                  </div>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">
-                    {messages.header.languageOptions.en}
-                  </SelectItem>
-                  <SelectItem value="es">
-                    {messages.header.languageOptions.es}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                <div className="flex items-center justify-center gap-1.5 w-full">
+                  <Languages className="h-3.5 w-3.5 text-muted-foreground" />
+                  <SelectValue placeholder={messages.header.languageLabel} />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">
+                  {messages.header.languageOptions.en}
+                </SelectItem>
+                <SelectItem value="es">
+                  {messages.header.languageOptions.es}
+                </SelectItem>
+              </SelectContent>
+            </Select>
 
             <Button
               onClick={onGeneratePDF}
               disabled={isGeneratingPDF}
-              className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center"
+              className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center h-9"
             >
-              <Download className="h-4 w-4 mr-2 shrink-0" />
+              <Download className="h-4 w-4 shrink-0" />
+              <span className="sm:hidden">{messages.header.pdfShort}</span>
               <span className="hidden sm:inline">
                 {isGeneratingPDF
                   ? messages.header.generating
                   : messages.header.downloadPdf}
               </span>
-              <span className="sm:hidden">{messages.header.pdfShort}</span>
             </Button>
           </div>
         </div>

@@ -10,8 +10,8 @@
     "pdfShort": "PDF",
     "languageLabel": "Idioma",
     "languageOptions": {
-      "en": "Inglés",
-      "es": "Español"
+      "en": "EN",
+      "es": "ES"
     }
   },
   "app": {
