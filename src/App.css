@@ -178,11 +178,30 @@
     -webkit-print-color-adjust: exact;
   }
 
+  .mobile-print-preview-root {
+    min-height: auto !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .mobile-print-preview-main {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  .mobile-print-preview-list {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   .print-container {
     display: block !important;
   }
 
   .print-page {
+    break-after: page;
     page-break-after: always;
     width: 210mm;
     height: 297mm;
@@ -193,7 +212,34 @@
   }
 
   .print-page:last-child {
+    break-after: auto;
     page-break-after: auto;
+  }
+
+  .mobile-print-page {
+    break-after: page;
+    page-break-after: always;
+    width: 210mm;
+    height: 297mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #f5f0e6 !important;
+  }
+
+  .mobile-print-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .mobile-print-page > .grimorio-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 }
 

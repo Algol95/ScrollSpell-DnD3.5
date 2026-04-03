@@ -146,7 +146,7 @@ export function App() {
 
   if (isMobilePrintPreviewOpen) {
     return (
-      <div className="min-h-screen bg-[#e8dfd2] text-[#3f3122] print:bg-white print:text-black">
+      <div className="mobile-print-preview-root min-h-screen bg-[#e8dfd2] text-[#3f3122] print:bg-white print:text-black">
         <div className="sticky top-0 z-20 border-b border-[#63492c]/20 bg-[#f5f0e6]/95 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-4xl flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 pr-1">
@@ -177,12 +177,12 @@ export function App() {
           </div>
         </div>
 
-        <main className="mx-auto w-full max-w-4xl px-2 py-4 print:max-w-none print:px-0 print:py-0">
-          <div className="space-y-4 print:space-y-0">
+        <main className="mobile-print-preview-main mx-auto w-full max-w-4xl px-2 py-4 print:max-w-none print:px-0 print:py-0">
+          <div className="mobile-print-preview-list space-y-4 print:space-y-0">
             {pages.map((page, index) => (
               <section
                 key={`${page.id}-${index + 1}`}
-                className="overflow-hidden rounded-lg bg-[#f5f0e6] shadow-[0_12px_32px_rgba(41,28,14,0.18)] print:mb-0 print:rounded-none print:shadow-none print:break-after-page"
+                className="mobile-print-page overflow-hidden rounded-lg bg-[#f5f0e6] shadow-[0_12px_32px_rgba(41,28,14,0.18)] print:mb-0 print:rounded-none print:shadow-none"
                 aria-label={`Página ${index + 1}`}
               >
                 <Page page={page} title={title} isPrintMode isMobilePreview />
@@ -309,6 +309,7 @@ export function App() {
                 margin: 0;
               }
               .print-page {
+                break-after: page;
                 page-break-after: always;
                 width: 210mm;
                 height: 297mm;
@@ -316,6 +317,7 @@ export function App() {
                 box-sizing: border-box;
               }
               .print-page:last-child {
+                break-after: auto;
                 page-break-after: auto;
               }
             }
