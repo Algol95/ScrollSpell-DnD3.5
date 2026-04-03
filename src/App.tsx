@@ -150,7 +150,9 @@ export function App() {
         <div className="sticky top-0 z-20 border-b border-[#63492c]/20 bg-[#f5f0e6]/95 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-4xl flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 pr-1">
-              <p className="truncate text-sm font-semibold sm:text-base">{title}</p>
+              <p className="truncate text-sm font-semibold sm:text-base">
+                {title}
+              </p>
               <p className="text-xs text-[#63492c]/80">
                 Usa Imprimir o Guardar PDF desde el navegador.
               </p>
