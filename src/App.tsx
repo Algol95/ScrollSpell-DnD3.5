@@ -9,6 +9,7 @@ import { useReactToPrint } from "react-to-print";
 import { useSpellbookPages } from "./hooks/useSpellbookPages";
 import { useSpellbookStorage } from "./hooks/useSpellbookStorage";
 import { ArchmageTips } from "./components/ArchmageTips";
+import { useTranslation, isDefaultTitle } from "./i18n-utils";
 import "./App.css";
 
 /**
@@ -16,6 +17,7 @@ import "./App.css";
  * @returns JSX.Element que representa la aplicación completa.
  */
 export function App() {
+  const { messages } = useTranslation();
   const {
     pages,
     currentPageIndex,
@@ -34,7 +36,11 @@ export function App() {
     theoreticalPages,
     maxTheoreticalPages,
     isOverTheoreticalLimit,
-  } = useSpellbookPages();
+  } = useSpellbookPages(messages.header.defaultTitle);
+
+  const spellCount = pages.reduce((acc, page) => acc + page.spells.length, 0);
+  const spellCountLabel =
+    spellCount === 1 ? messages.app.spellSingular : messages.app.spellPlural;
 
   // Handler para el cambio de título del grimorio
   const handleTitleChange = React.useCallback(
@@ -67,12 +73,18 @@ export function App() {
     }
   }, [currentPageIndex]);
 
+  React.useEffect(() => {
+    if (isDefaultTitle(title)) {
+      setTitle(messages.header.defaultTitle);
+    }
+  }, [messages.header.defaultTitle, setTitle, title]);
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl text-gold mb-4 animate-pulse">&#x2726;</div>
-          <p className="text-muted-foreground">Cargando grimorio...</p>
+          <p className="text-muted-foreground">{messages.app.loading}</p>
         </div>
       </div>
     );
@@ -97,22 +109,23 @@ export function App() {
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
                   <span className="text-gold">&#x2726;</span>
-                  Vista Previa del Grimorio
+                  {messages.app.previewTitle}
                 </h2>
                 <span className="text-xs px-2 py-1 rounded bg-muted text-muted-foreground ml-2">
-                  {pages.reduce((acc, p) => acc + p.spells.length, 0)} hechizos
+                  {spellCount} {spellCountLabel}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span
                   className={`text-xs font-semibold px-2 py-1 rounded ${isOverTheoreticalLimit ? "bg-destructive/10 text-destructive border border-destructive" : "bg-muted text-muted-foreground"}`}
-                  title="Páginas teóricas según reglas oficiales de D&D 3.5"
+                  title={messages.app.pagesOnRoleTitle}
                 >
-                  Páginas on-rol: {theoreticalPages} / {maxTheoreticalPages}
+                  {messages.app.pagesOnRole}: {theoreticalPages} /{" "}
+                  {maxTheoreticalPages}
                 </span>
                 {isOverTheoreticalLimit && (
                   <span className="text-xs text-destructive font-semibold ml-1">
-                    ¡Has excedido el límite oficial de páginas!
+                    {messages.app.pagesLimitExceeded}
                   </span>
                 )}
               </div>
@@ -163,7 +176,7 @@ export function App() {
               onClick={handleAddPage}
             >
               <Plus className="h-4 w-4 mr-2" />
-              Añadir Nueva Página
+              {messages.app.addNewPage}
             </Button>
           </div>
 

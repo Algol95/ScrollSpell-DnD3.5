@@ -1,14 +1,15 @@
 import { FaGithub, FaLinkedin, FaGlobe } from "react-icons/fa";
+import { useTranslation } from "../i18n-utils";
 
 export function Footer() {
+  const { messages } = useTranslation();
+
   return (
     <footer className="w-full py-6 mt-10 text-center text-xs text-muted-foreground border-t border-border bg-background/80 flex flex-col items-center gap-2">
+      <p>{messages.footer.disclaimer}</p>
       <p>
-        La página ha sido elaborada sin ánimo de lucro y continúa en fase de
-        desarrollo.
-      </p>
-      <p>
-        &copy; {new Date().getFullYear()} Grimorio Arcano. Hecho por{" "}
+        &copy; {new Date().getFullYear()} {messages.header.defaultTitle}.{" "}
+        {messages.footer.madeByPrefix}{" "}
         <a
           href="https://www.linkedin.com/in/angel-dev-aragon"
           target="_blank"
@@ -17,7 +18,7 @@ export function Footer() {
         >
           Ángel Aragón
         </a>
-        . Inspirado en D&D 3.5. No oficial.
+        . {messages.footer.inspiredBy}
       </p>
       <div className="flex items-center gap-4 justify-center mb-1">
         <a
@@ -25,7 +26,7 @@ export function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-gold transition-colors"
-          aria-label="LinkedIn"
+          aria-label={messages.footer.linkedin}
         >
           <FaLinkedin className="h-5 w-5" />
         </a>
@@ -34,7 +35,7 @@ export function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-gold transition-colors"
-          aria-label="GitHub"
+          aria-label={messages.footer.github}
         >
           <FaGithub className="h-5 w-5" />
         </a>
@@ -43,7 +44,7 @@ export function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-gold transition-colors hidden"
-          aria-label="Portfolio"
+          aria-label={messages.footer.portfolio}
         >
           <FaGlobe className="h-5 w-5" />
         </a>

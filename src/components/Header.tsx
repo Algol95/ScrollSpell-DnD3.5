@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/Select";
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,7 +16,9 @@ import {
   Scroll,
   Pencil,
   Check,
+  Languages,
 } from "lucide-react";
+import { useTranslation, type Locale } from "../i18n-utils";
 
 /**
  * Componente de encabezado del libro de hechizos que incluye el título editable, la navegación de páginas y la generación de PDF. Permite a los usuarios cambiar el título del libro, navegar entre las páginas del libro de hechizos y generar un PDF del contenido. El componente utiliza Tailwind CSS para el estilo y lucide-react para los íconos, proporcionando una interfaz de usuario atractiva y funcional para la gestión del libro de hechizos.
@@ -40,6 +49,7 @@ export function Header({
   onGeneratePDF,
   isGeneratingPDF,
 }: HeaderProps) {
+  const { locale, setLocale, messages } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(title);
 
@@ -52,7 +62,7 @@ export function Header({
     setIsEditing(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSave();
     } else if (e.key === "Escape") {
@@ -100,7 +110,7 @@ export function Header({
                 </div>
               )}
               <p className="text-xs text-muted-foreground">
-                D&D 3.5 Spellbook Generator
+                {messages.header.appSubtitle}
               </p>
             </div>
           </div>
@@ -161,17 +171,43 @@ export function Header({
             </Button>
           </div>
 
-          <Button
-            onClick={onGeneratePDF}
-            disabled={isGeneratingPDF}
-            className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center"
-          >
-            <Download className="h-4 w-4 mr-2 shrink-0" />
-            <span className="hidden sm:inline">
-              {isGeneratingPDF ? "Generando..." : "Descargar PDF"}
-            </span>
-            <span className="sm:hidden">PDF</span>
-          </Button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="w-[130px] sm:w-[150px]">
+              <Select
+                value={locale}
+                onValueChange={(value) => setLocale(value as Locale)}
+              >
+                <SelectTrigger className="w-full bg-background/60 border-border">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Languages className="h-4 w-4 text-muted-foreground" />
+                    <SelectValue placeholder={messages.header.languageLabel} />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">
+                    {messages.header.languageOptions.en}
+                  </SelectItem>
+                  <SelectItem value="es">
+                    {messages.header.languageOptions.es}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button
+              onClick={onGeneratePDF}
+              disabled={isGeneratingPDF}
+              className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center"
+            >
+              <Download className="h-4 w-4 mr-2 shrink-0" />
+              <span className="hidden sm:inline">
+                {isGeneratingPDF
+                  ? messages.header.generating
+                  : messages.header.downloadPdf}
+              </span>
+              <span className="sm:hidden">{messages.header.pdfShort}</span>
+            </Button>
+          </div>
         </div>
       </div>
     </header>

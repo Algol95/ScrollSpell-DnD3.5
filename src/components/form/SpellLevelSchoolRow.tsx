@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/Select";
+import { getSchoolLabel, useTranslation } from "../../i18n-utils";
 
 /**
  * Componente de fila para seleccionar el nivel y la escuela de un hechizo. Permite a los usuarios elegir el nivel del hechizo (desde truco hasta nivel 9) y la escuela de magia a la que pertenece. Utiliza componentes de selección personalizados para una mejor experiencia de usuario.
@@ -26,20 +27,27 @@ export function SpellLevelSchoolRow({
   setValue,
   spellSchools,
 }: SpellLevelSchoolRowProps) {
+  const { messages } = useTranslation();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
         <Label htmlFor="level" className="text-foreground">
-          Nivel *
+          {messages.form.level} *
         </Label>
         <Select value={level} onValueChange={(v) => setValue("level", v)}>
           <SelectTrigger className="bg-input border-border">
-            <SelectValue placeholder="Nivel" />
+            <SelectValue placeholder={messages.form.levelPlaceholder} />
           </SelectTrigger>
           <SelectContent>
             {SPELL_LEVELS.map((level) => (
               <SelectItem key={level} value={level.toString()}>
-                {level === 0 ? "Truco (0)" : `Nivel ${level}`}
+                {level === 0
+                  ? messages.form.cantrip
+                  : messages.form.levelValue.replace(
+                      "{level}",
+                      level.toString(),
+                    )}
               </SelectItem>
             ))}
           </SelectContent>
@@ -47,16 +55,16 @@ export function SpellLevelSchoolRow({
       </div>
       <div className="space-y-2">
         <Label htmlFor="school" className="text-foreground">
-          Escuela *
+          {messages.form.school} *
         </Label>
         <Select value={school} onValueChange={(v) => setValue("school", v)}>
           <SelectTrigger className="bg-input border-border">
-            <SelectValue placeholder="Escuela" />
+            <SelectValue placeholder={messages.form.schoolPlaceholder} />
           </SelectTrigger>
           <SelectContent>
             {spellSchools.map((school) => (
               <SelectItem key={school} value={school}>
-                {school}
+                {getSchoolLabel(school, messages)}
               </SelectItem>
             ))}
           </SelectContent>

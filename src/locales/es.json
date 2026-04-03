@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "appName": "Spellbook Generator DnD3.5"
+  },
+  "header": {
+    "defaultTitle": "Grimorio Arcano",
+    "appSubtitle": "Generador de Grimorios D&D 3.5",
+    "downloadPdf": "Descargar PDF",
+    "generating": "Generando...",
+    "pdfShort": "PDF",
+    "languageLabel": "Idioma",
+    "languageOptions": {
+      "en": "Inglés",
+      "es": "Español"
+    }
+  },
+  "app": {
+    "loading": "Cargando grimorio...",
+    "previewTitle": "Vista Previa del Grimorio",
+    "spellSingular": "hechizo",
+    "spellPlural": "hechizos",
+    "pagesOnRole": "Páginas on-rol",
+    "pagesOnRoleTitle": "Páginas teóricas según reglas oficiales de D&D 3.5",
+    "pagesLimitExceeded": "¡Has excedido el límite oficial de páginas!",
+    "addNewPage": "Añadir Nueva Página"
+  },
+  "form": {
+    "editSpell": "Editar Hechizo",
+    "inscribeSpell": "Inscribir Hechizo",
+    "page": "Página",
+    "name": "Nombre del Hechizo",
+    "namePlaceholder": "Bola de Fuego",
+    "subtitle": "Subtítulo",
+    "optional": "opcional",
+    "subtitlePlaceholder": "Explosión de fuego ardiente",
+    "level": "Nivel",
+    "levelPlaceholder": "Nivel",
+    "cantrip": "Truco (0)",
+    "levelValue": "Nivel {level}",
+    "school": "Escuela",
+    "schoolPlaceholder": "Escuela",
+    "castingTime": "Tiempo de Lanzamiento",
+    "castingTimePlaceholder": "1 acción estándar",
+    "range": "Alcance",
+    "rangePlaceholder": "Largo (120m)",
+    "components": "Componentes",
+    "componentsPlaceholder": "V, S, M (guano de murciélago)",
+    "duration": "Duración",
+    "durationPlaceholder": "Instantáneo",
+    "target": "Objetivo/Área",
+    "targetPlaceholder": "Esfera de 6m de radio",
+    "savingThrow": "Tirada de Salvación",
+    "savingThrowPlaceholder": "Reflejos (mitad)",
+    "spellResistance": "Resistencia a Conjuros",
+    "spellResistancePlaceholder": "Sí",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Redacta el funcionamiento del hechizo e incluso rolea como lo anotaría tu personaje en el rol.",
+    "updateSpell": "Actualizar Hechizo",
+    "inscribeInSpellbook": "Inscribir en el Grimorio"
+  },
+  "page": {
+    "generatedWith": "Generado con",
+    "emptyTitle": "Esta página aguarda los secretos arcanos...",
+    "emptySubtitle": "Inscribe tu primer hechizo"
+  },
+  "card": {
+    "level": "Nivel",
+    "castingTime": "Tiempo",
+    "range": "Alcance",
+    "components": "Componentes",
+    "duration": "Duración",
+    "target": "Objetivo/Área",
+    "savingThrow": "Salvación",
+    "spellResistance": "R. Conjuros",
+    "wizardNotes": "Notas del Mago"
+  },
+  "footer": {
+    "disclaimer": "La página ha sido elaborada sin ánimo de lucro y continúa en fase de desarrollo.",
+    "madeByPrefix": "Hecho por",
+    "inspiredBy": "Inspirado en D&D 3.5. No oficial.",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "portfolio": "Portfolio"
+  },
+  "tips": {
+    "title": "Consejos del Archimago",
+    "items": [
+      "Cada página contiene un único hechizo.",
+      "Haz clic en una página para seleccionarla y ver sus detalles o agregar un nuevo hechizo.",
+      "Pasa el ratón sobre un hechizo para eliminarlo o editarlo.",
+      "El grimorio se guarda automáticamente en el almacenamiento local del navegador.",
+      "Puedes editar el título en la cabecera de la aplicación.",
+      "El número de páginas teóricas on-rol se calcula según el nivel de los hechizos, siguiendo las reglas oficiales de D&D 3.5.",
+      "Si excedes el límite oficial de páginas, se mostrará una advertencia para ayudarte a mantener tu grimorio dentro de las reglas. Se puede seguir añadiendo hechizos sin restricciones para permitir flexibilidad en la creación de tu grimorio y ajustarte a las reglas de tu master."
+    ]
+  },
+  "schools": {
+    "Abjuración": "Abjuración",
+    "Conjuración": "Conjuración",
+    "Adivinación": "Adivinación",
+    "Encantamiento": "Encantamiento",
+    "Evocación": "Evocación",
+    "Ilusión": "Ilusión",
+    "Nigromancia": "Nigromancia",
+    "Transmutación": "Transmutación",
+    "Universal": "Universal"
+  }
+}

@@ -4,12 +4,13 @@ import { Button } from "../components/ui/Button";
 import { ScrollText, Sparkles } from "lucide-react";
 import { SPELL_SCHOOLS, type Spell } from "../../lib/types";
 import { useSpellForm } from "../hooks/useSpellForm";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useEffect } from "react";
 import { SpellLevelSchoolRow } from "./form/SpellLevelSchoolRow";
 import { SpellInputRow } from "./form/SpellInputRow";
 import { SpellGridRow } from "./form/SpellGridRow";
 import { SpellDescriptionRow } from "./form/SpellDescriptionRow";
+import { useTranslation } from "../i18n-utils";
 
 interface SpellFormProps {
   onAddSpell: (spell: Spell) => void;
@@ -47,11 +48,12 @@ export function Form({
   currentPageNumber,
   editingSpell,
 }: SpellFormProps) {
+  const { messages } = useTranslation();
   const { editingMeta } = useSpellForm({ editingSpell }) as {
     editingMeta: { pageId: string; id: string } | null;
   };
 
-  const { register, handleSubmit, reset, watch, setValue } =
+  const { control, register, handleSubmit, reset, setValue } =
     useForm<SpellFormData>({
       defaultValues: editingSpell
         ? {
@@ -99,9 +101,15 @@ export function Form({
     }
   }, [editingSpell, reset]);
 
-  // ADVERTENCIA: El uso de watch() de react-hook-form puede causar que React Compiler omita la memoización de este componente.
-  // En este caso es seguro porque el formulario no es memoizado ni se pasa a otros hooks memoizados.
-  const descriptionLength = watch("description")?.length || 0;
+  const levelValue = useWatch({ control, name: "level" }) ?? "1";
+  const schoolValue = useWatch({ control, name: "school" }) ?? SPELL_SCHOOLS[0];
+  const nameValue = useWatch({ control, name: "name" }) ?? "";
+  const castingTimeValue = useWatch({ control, name: "castingTime" }) ?? "";
+  const rangeValue = useWatch({ control, name: "range" }) ?? "";
+  const componentsValue = useWatch({ control, name: "components" }) ?? "";
+  const durationValue = useWatch({ control, name: "duration" }) ?? "";
+  const descriptionValue = useWatch({ control, name: "description" }) ?? "";
+  const descriptionLength = descriptionValue.length;
 
   const onSubmit = (data: SpellFormData) => {
     const baseSpell: Omit<Spell, "id"> & { subtitle?: string } = {
@@ -146,104 +154,106 @@ export function Form({
       <div className="flex items-center gap-3 mb-4 sm:mb-6">
         <ScrollText className="h-6 w-6 text-gold" />
         <h2 className="text-lg sm:text-xl font-semibold text-foreground">
-          {editingMeta ? "Editar Hechizo" : "Inscribir Hechizo"}
+          {editingMeta ? messages.form.editSpell : messages.form.inscribeSpell}
         </h2>
         <span className="ml-auto text-sm text-muted-foreground">
-          Página {currentPageNumber}
+          {messages.form.page} {currentPageNumber}
         </span>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <SpellInputRow
           id="name"
-          label="Nombre del Hechizo"
-          placeholder="Bola de Fuego"
+          label={messages.form.name}
+          placeholder={messages.form.namePlaceholder}
           required
           {...register("name", { required: true })}
         />
         <SpellInputRow
           id="subtitle"
-          label="Subtítulo (opcional)"
-          placeholder="Explosión de fuego ardiente"
+          label={`${messages.form.subtitle} (${messages.form.optional})`}
+          placeholder={messages.form.subtitlePlaceholder}
           {...register("subtitle")}
         />
         <SpellLevelSchoolRow
-          level={watch("level")}
-          school={watch("school")}
+          level={levelValue}
+          school={schoolValue}
           setValue={setValue}
           spellSchools={[...SPELL_SCHOOLS]}
         />
         <SpellGridRow
           leftId="castingTime"
-          leftLabel="Tiempo de Lanzamiento *"
+          leftLabel={`${messages.form.castingTime} *`}
           leftInputProps={{
             ...register("castingTime", { required: true }),
-            placeholder: "1 acción estándar",
+            placeholder: messages.form.castingTimePlaceholder,
             required: true,
           }}
           rightId="range"
-          rightLabel="Alcance *"
+          rightLabel={`${messages.form.range} *`}
           rightInputProps={{
             ...register("range", { required: true }),
-            placeholder: "Largo (120m)",
+            placeholder: messages.form.rangePlaceholder,
             required: true,
           }}
         />
         <SpellInputRow
           id="components"
-          label="Componentes"
-          placeholder="V, S, M (guano de murciélago)"
+          label={messages.form.components}
+          placeholder={messages.form.componentsPlaceholder}
           required
           {...register("components", { required: true })}
         />
         <SpellInputRow
           id="duration"
-          label="Duración"
-          placeholder="Instantáneo"
+          label={messages.form.duration}
+          placeholder={messages.form.durationPlaceholder}
           required
           {...register("duration", { required: true })}
         />
         <SpellInputRow
           id="target"
-          label="Objetivo/Área"
-          placeholder="Esfera de 6m de radio"
+          label={messages.form.target}
+          placeholder={messages.form.targetPlaceholder}
           {...register("target")}
         />
         <SpellGridRow
           leftId="savingThrow"
-          leftLabel="Tirada de Salvación"
+          leftLabel={messages.form.savingThrow}
           leftInputProps={{
             ...register("savingThrow"),
-            placeholder: "Reflejos (mitad)",
+            placeholder: messages.form.savingThrowPlaceholder,
           }}
           rightId="spellResistance"
-          rightLabel="Resistencia a Conjuros"
+          rightLabel={messages.form.spellResistance}
           rightInputProps={{
             ...register("spellResistance"),
-            placeholder: "Sí",
+            placeholder: messages.form.spellResistancePlaceholder,
           }}
         />
         <SpellDescriptionRow
           maxLength={DESCRIPTION_MAX_LENGTH}
           length={descriptionLength}
           {...register("description", { required: true })}
-          placeholder="Redacta el funcionamiento del hechizo e incluso rolea como lo anotaría tu personaje en el rol."
+          placeholder={messages.form.descriptionPlaceholder}
         />
         <Button
           type="submit"
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
           disabled={
-            !watch("name") ||
-            !watch("school") ||
-            !watch("castingTime") ||
-            !watch("range") ||
-            !watch("components") ||
-            !watch("duration") ||
-            !watch("description")
+            !nameValue ||
+            !schoolValue ||
+            !castingTimeValue ||
+            !rangeValue ||
+            !componentsValue ||
+            !durationValue ||
+            !descriptionValue
           }
         >
           <Sparkles className="h-4 w-4 mr-2" />
-          {editingMeta ? "Actualizar Hechizo" : "Inscribir en el Grimorio"}
+          {editingMeta
+            ? messages.form.updateSpell
+            : messages.form.inscribeInSpellbook}
         </Button>
       </form>
     </div>

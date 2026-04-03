@@ -1,5 +1,6 @@
 import { Label } from "../../components/ui/Label";
 import { Textarea } from "../../components/ui/Textarea";
+import { useTranslation } from "../../i18n-utils";
 
 /**
  * Componente de fila para ingresar la descripción de un hechizo. Permite a los usuarios ingresar una descripción detallada del hechizo, con un límite de caracteres y un contador de caracteres restantes. El componente incluye una etiqueta, un área de texto y un contador de caracteres para ayudar a los usuarios a mantenerse dentro del límite permitido.
@@ -19,10 +20,12 @@ export function SpellDescriptionRow({
   placeholder = "",
   ...textareaProps
 }: SpellDescriptionRowProps) {
+  const { messages } = useTranslation();
+
   return (
     <div className="space-y-2">
       <Label htmlFor="description" className="text-foreground">
-        Descripción *
+        {messages.form.description} *
       </Label>
       <Textarea
         id="description"

@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "appName": "Spellbook Generator DnD3.5"
+  },
+  "header": {
+    "defaultTitle": "Arcane Spellbook",
+    "appSubtitle": "D&D 3.5 Spellbook Generator",
+    "downloadPdf": "Download PDF",
+    "generating": "Generating...",
+    "pdfShort": "PDF",
+    "languageLabel": "Language",
+    "languageOptions": {
+      "en": "English",
+      "es": "Spanish"
+    }
+  },
+  "app": {
+    "loading": "Loading spellbook...",
+    "previewTitle": "Spellbook Preview",
+    "spellSingular": "spell",
+    "spellPlural": "spells",
+    "pagesOnRole": "In-world pages",
+    "pagesOnRoleTitle": "Theoretical pages according to official D&D 3.5 rules",
+    "pagesLimitExceeded": "You have exceeded the official page limit!",
+    "addNewPage": "Add New Page"
+  },
+  "form": {
+    "editSpell": "Edit Spell",
+    "inscribeSpell": "Inscribe Spell",
+    "page": "Page",
+    "name": "Spell Name",
+    "namePlaceholder": "Fireball",
+    "subtitle": "Subtitle",
+    "optional": "optional",
+    "subtitlePlaceholder": "Blazing burst of fire",
+    "level": "Level",
+    "levelPlaceholder": "Level",
+    "cantrip": "Cantrip (0)",
+    "levelValue": "Level {level}",
+    "school": "School",
+    "schoolPlaceholder": "School",
+    "castingTime": "Casting Time",
+    "castingTimePlaceholder": "1 standard action",
+    "range": "Range",
+    "rangePlaceholder": "Long (120m)",
+    "components": "Components",
+    "componentsPlaceholder": "V, S, M (bat guano)",
+    "duration": "Duration",
+    "durationPlaceholder": "Instantaneous",
+    "target": "Target/Area",
+    "targetPlaceholder": "20-ft.-radius spread",
+    "savingThrow": "Saving Throw",
+    "savingThrowPlaceholder": "Reflex half",
+    "spellResistance": "Spell Resistance",
+    "spellResistancePlaceholder": "Yes",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe how the spell works and even roleplay how your character would write it down.",
+    "updateSpell": "Update Spell",
+    "inscribeInSpellbook": "Inscribe in Spellbook"
+  },
+  "page": {
+    "generatedWith": "Generated with",
+    "emptyTitle": "This page awaits arcane secrets...",
+    "emptySubtitle": "Inscribe your first spell"
+  },
+  "card": {
+    "level": "Level",
+    "castingTime": "Casting Time",
+    "range": "Range",
+    "components": "Components",
+    "duration": "Duration",
+    "target": "Target/Area",
+    "savingThrow": "Saving Throw",
+    "spellResistance": "Spell Resistance",
+    "wizardNotes": "Wizard Notes"
+  },
+  "footer": {
+    "disclaimer": "This page has been created as a non-profit project and is still in development.",
+    "madeByPrefix": "Made by",
+    "inspiredBy": "Inspired by D&D 3.5. Unofficial.",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "portfolio": "Portfolio"
+  },
+  "tips": {
+    "title": "Archmage Tips",
+    "items": [
+      "Each page contains a single spell.",
+      "Click a page to select it and view its details or add a new spell.",
+      "Hover over a spell to delete or edit it.",
+      "The spellbook is saved automatically in the browser's local storage.",
+      "You can edit the title in the application header.",
+      "The number of in-world theoretical pages is calculated according to spell level, following the official D&D 3.5 rules.",
+      "If you exceed the official page limit, a warning will appear to help keep your spellbook within the rules. You can still keep adding spells without restrictions to preserve flexibility and match your DM's table rules."
+    ]
+  },
+  "schools": {
+    "Abjuración": "Abjuration",
+    "Conjuración": "Conjuration",
+    "Adivinación": "Divination",
+    "Encantamiento": "Enchantment",
+    "Evocación": "Evocation",
+    "Ilusión": "Illusion",
+    "Nigromancia": "Necromancy",
+    "Transmutación": "Transmutation",
+    "Universal": "Universal"
+  }
+}

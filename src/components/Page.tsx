@@ -3,6 +3,7 @@ import { Card } from "./Card";
 import { Glyph } from "./Glyph";
 import { Trash2 } from "lucide-react";
 import { Button } from "../components/ui/Button";
+import { useTranslation } from "../i18n-utils";
 
 interface PageProps {
   page: SpellbookPageType;
@@ -24,6 +25,7 @@ export function Page({
   onDeletePage,
   isPrintMode = false,
 }: PageProps) {
+  const { messages } = useTranslation();
   const spell = page.spells[0];
 
   return (
@@ -67,7 +69,7 @@ export function Page({
         &#x2014; {page.pageNumber} &#x2014;
       </div>
       <div className="absolute bottom-6 right-6 text-[5px] lg:text-sm text-ink/30 z-10 select-none px-2 italic">
-        Generado con{" "}
+        {messages.page.generatedWith}{" "}
         <a
           href="https://spellbookgenerator.netlify.app"
           target="_blank"
@@ -95,10 +97,10 @@ export function Page({
             <div className="flex-1 flex flex-col items-center justify-center text-ink/30">
               <span className="text-4xl mb-3">&#x1F4DC;</span>
               <p className="text-sm italic font-serif text-center">
-                Esta pagina aguarda los secretos arcanos...
+                {messages.page.emptyTitle}
               </p>
               <p className="text-xs mt-1 font-serif italic">
-                Inscribe tu primer hechizo
+                {messages.page.emptySubtitle}
               </p>
             </div>
           ) : (

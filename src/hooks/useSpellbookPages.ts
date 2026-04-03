@@ -37,12 +37,12 @@ const loadFromStorage = () => {
  * Hook personalizado para gestionar las páginas del grimorio de hechizos. Proporciona funciones para agregar, actualizar y eliminar hechizos, así como para manejar la navegación entre páginas y el título del grimorio. También calcula el número de páginas teóricas basadas en los niveles de los hechizos y verifica si se ha excedido el límite teórico.
  * @returns Objeto con el estado y las funciones para gestionar el grimorio de hechizos.
  */
-export function useSpellbookPages() {
+export function useSpellbookPages(defaultTitle: string) {
   const stored = loadFromStorage();
   const [pages, setPages] = useState<PageType[]>(
     stored && stored.pages.length > 0 ? stored.pages : [createEmptyPage(1)],
   );
-  const [title, setTitle] = useState(stored ? stored.title : "Grimorio Arcano");
+  const [title, setTitle] = useState(stored ? stored.title : defaultTitle);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [editingSpell, setEditingSpell] = useState<{
