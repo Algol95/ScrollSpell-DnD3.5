@@ -50,9 +50,6 @@ export interface ButtonProps
  * Componente Button que utiliza las variantes definidas en buttonVariants para renderizar un botón estilizado con Tailwind CSS.
  */
 export function Button({ className, variant, size, ...props }: ButtonProps) {
-  React.useEffect(() => {
-    console.log("[Button] Renderizado con props:", { ...props, variant, size });
-  }, []);
   return (
     <button
       type="button"

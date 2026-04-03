@@ -75,12 +75,20 @@
     "wizardNotes": "Wizard Notes"
   },
   "footer": {
+    "projectTitle": "A visual, printable spellbook maintained with care",
     "disclaimer": "This page has been created as a non-profit project and is still in development.",
     "madeByPrefix": "Made by",
     "inspiredBy": "Inspired by D&D 3.5. Unofficial.",
     "linkedin": "LinkedIn",
     "github": "GitHub",
-    "portfolio": "Portfolio"
+    "twitch": "Twitch",
+    "discord": "Discord",
+    "portfolio": "Portfolio",
+    "donateTitle": "Support the project",
+    "donateDescription": "If ScrollSpell is useful at your table, you can help keep improving and maintaining the app with a PayPal donation.",
+    "donateHint": "Your support helps keep the tool online and funds further polish and new improvements.",
+    "donateAction": "Donate with PayPal",
+    "donatePending": "Add your real PayPal link in Footer.tsx to enable the donation button."
   },
   "tips": {
     "title": "Archmage Tips",

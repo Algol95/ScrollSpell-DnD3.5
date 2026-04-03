@@ -75,12 +75,20 @@
     "wizardNotes": "Notas del Mago"
   },
   "footer": {
+    "projectTitle": "Un grimorio visual, imprimible y mantenido con cuidado",
     "disclaimer": "La página ha sido elaborada sin ánimo de lucro y continúa en fase de desarrollo.",
     "madeByPrefix": "Hecho por",
     "inspiredBy": "Inspirado en D&D 3.5. No oficial.",
     "linkedin": "LinkedIn",
     "github": "GitHub",
-    "portfolio": "Portfolio"
+    "twitch": "Twitch",
+    "discord": "Discord",
+    "portfolio": "Portfolio",
+    "donateTitle": "Apoya el proyecto",
+    "donateDescription": "Si ScrollSpell te resulta útil en tus partidas, puedes ayudar a mantener y mejorar la aplicación con una donación por PayPal.",
+    "donateHint": "Tu apoyo ayuda a seguir iterando la herramienta, pulir detalles y mantenerla online.",
+    "donateAction": "Donar con PayPal",
+    "donatePending": "Añade tu enlace real de PayPal en Footer.tsx para activar el botón de donación."
   },
   "tips": {
     "title": "Consejos del Archimago",
