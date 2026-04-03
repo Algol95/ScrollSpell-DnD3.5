@@ -85,7 +85,7 @@
     "discord": "Discord",
     "portfolio": "Portfolio",
     "donateTitle": "Support the project",
-    "donateDescription": "If ScrollSpell is useful at your table, you can help keep improving and maintaining the app with a PayPal donation.",
+    "donateDescription": "If Arcane SpellBook is useful at your party, you can help keep improving and maintaining the app with a PayPal donation.",
     "donateHint": "Your support helps keep the tool online and funds further polish and new improvements.",
     "donateAction": "Donate with PayPal",
     "donatePending": "Add your real PayPal link in Footer.tsx to enable the donation button."
