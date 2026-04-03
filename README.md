@@ -110,13 +110,6 @@ Spellbook Generator DnD3.5 es una aplicación web desarrollada en React + TypeSc
 
 Si la herramienta te resulta útil, puedes apoyar su mantenimiento y evolución desde el footer de la aplicación mediante el botón oficial de donación de PayPal.
 
-## Enlaces del proyecto
-
-- GitHub: [https://github.com/Algol95](https://github.com/Algol95)
-- LinkedIn: [https://www.linkedin.com/in/angel-dev-aragon](https://www.linkedin.com/in/angel-dev-aragon)
-- Twitch: [https://www.twitch.tv/gayspervt](https://www.twitch.tv/gayspervt)
-- Discord: [https://discord.gg/a4pFwRxcPx](https://discord.gg/a4pFwRxcPx)
-
 ## Autoría
 
 - Desarrollo principal: Ángel Aragón
