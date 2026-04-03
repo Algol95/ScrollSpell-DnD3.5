@@ -143,7 +143,6 @@
   }
 }
 
-/* Custom scrollbar for the spellbook */
 .overflow-y-auto::-webkit-scrollbar {
   width: 8px;
 }
@@ -200,7 +199,6 @@
 
 @media (max-width: 640px) {
   .grimorio-page {
-    /* Escala general menor en móvil para que la vista previa se acerque al PDF */
     font-size: 0.6rem;
   }
 
@@ -228,7 +226,6 @@
     font-size: 0.45rem;
   }
 
-  /* Comprimir espacios verticales entre bloques en la página del grimorio */
   .grimorio-page .grid {
     row-gap: 0.05rem;
   }
@@ -241,7 +238,6 @@
     margin-bottom: 0.05rem;
   }
 
-  /* Reducir visualmente el glifo en móviles */
   .grimorio-page svg {
     transform: scale(0.8);
     transform-origin: center;
