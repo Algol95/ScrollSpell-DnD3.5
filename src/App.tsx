@@ -12,6 +12,25 @@ import { ArchmageTips } from "./components/ArchmageTips";
 import { useTranslation, isDefaultTitle } from "./i18n-utils";
 import "./App.css";
 
+type Html2PdfModule = {
+  default: (element: HTMLElement) => {
+    set: (options: Record<string, unknown>) => {
+      save: () => Promise<void>;
+    };
+  };
+};
+
+function shouldUseMobilePdfFallback() {
+  if (typeof window === "undefined") return false;
+
+  const userAgent = window.navigator.userAgent;
+  const isMobileDevice =
+    /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent) ||
+    window.matchMedia("(max-width: 768px)").matches;
+
+  return isMobileDevice;
+}
+
 /**
  * Componente principal de la aplicación de grimorio de hechizos. Gestiona el estado del grimorio, incluyendo las páginas, los hechizos y el título. También maneja la generación de PDF y la navegación entre páginas.
  * @returns JSX.Element que representa la aplicación completa.
@@ -66,6 +85,46 @@ export function App() {
     },
   });
 
+  const handleGeneratePDF = React.useCallback(async () => {
+    if (!printRef.current) {
+      return;
+    }
+
+    setIsGeneratingPDF(true);
+
+    try {
+      if (shouldUseMobilePdfFallback()) {
+        const html2pdf = (await import("html2pdf.js")) as Html2PdfModule;
+
+        await html2pdf
+          .default(printRef.current)
+          .set({
+            margin: [0, 0, 0, 0],
+            filename: `${title.replace(/\s+/g, "_") || "spellbook"}.pdf`,
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              backgroundColor: "#f5f0e6",
+            },
+            jsPDF: {
+              unit: "mm",
+              format: "a4",
+              orientation: "portrait",
+            },
+            pagebreak: { mode: ["css", "legacy"] },
+          })
+          .save();
+
+        return;
+      }
+
+      await handlePrint();
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  }, [handlePrint, title]);
+
   React.useEffect(() => {
     const pageElement = document.getElementById(`page-${currentPageIndex}`);
     if (pageElement) {
@@ -98,7 +157,7 @@ export function App() {
         totalPages={pages.length}
         currentPage={currentPageIndex + 1}
         onPageChange={handlePageChange}
-        onGeneratePDF={() => handlePrint()}
+        onGeneratePDF={handleGeneratePDF}
         isGeneratingPDF={isGeneratingPDF}
       />
 
@@ -192,8 +251,12 @@ export function App() {
         <ArchmageTips />
       </main>
 
-      <div className="hidden">
-        <div ref={printRef} className="print-container">
+      <div
+        aria-hidden="true"
+        className="fixed top-0 opacity-0 pointer-events-none"
+        style={{ left: "-99999px" }}
+      >
+        <div ref={printRef} className="print-container bg-parchment">
           <style>{`
             @media print {
               @page {
