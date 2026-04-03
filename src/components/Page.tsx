@@ -11,6 +11,7 @@ interface PageProps {
   onDeleteSpell?: (pageId: string, spellId: string) => void;
   onDeletePage?: (pageId: string) => void;
   isPrintMode?: boolean;
+  isMobilePreview?: boolean;
 }
 
 /**
@@ -24,6 +25,7 @@ export function Page({
   onDeleteSpell,
   onDeletePage,
   isPrintMode = false,
+  isMobilePreview = false,
 }: PageProps) {
   const { messages } = useTranslation();
   const spell = page.spells[0];
@@ -41,7 +43,13 @@ export function Page({
         backgroundSize: "20px 20px, 20px 20px, 100% 100%",
       }}
     >
-      {spell && <Glyph level={spell.level} school={spell.school} />}
+      {spell && (
+        <Glyph
+          level={spell.level}
+          school={spell.school}
+          scale={isMobilePreview ? 0.72 : 1}
+        />
+      )}
 
       {!isPrintMode && onDeletePage && !spell && (
         <Button
@@ -70,7 +78,11 @@ export function Page({
       </div>
       <div
         className={`absolute bottom-6 right-6 text-ink/30 z-10 select-none px-2 italic ${
-          isPrintMode ? "text-[12px]" : "text-[5px] lg:text-sm"
+          isMobilePreview
+            ? "text-[7px] sm:text-[9px]"
+            : isPrintMode
+              ? "text-[12px]"
+              : "text-[5px] lg:text-sm"
         }`}
       >
         {messages.page.generatedWith}{" "}

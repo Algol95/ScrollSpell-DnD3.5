@@ -4,7 +4,7 @@ import { Page } from "./components/Page";
 import { Form } from "./components/Form";
 import { Button } from "./components/ui/Button";
 import { Footer } from "./components/Footer";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus, Printer } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import { useSpellbookPages } from "./hooks/useSpellbookPages";
 import { useSpellbookStorage } from "./hooks/useSpellbookStorage";
@@ -21,82 +21,6 @@ function shouldUseMobilePdfFallback() {
     window.matchMedia("(max-width: 768px)").matches;
 
   return isMobileDevice;
-}
-
-function buildPrintWindowMarkup(element: HTMLElement, documentTitle: string) {
-  const styles = Array.from(
-    window.document.querySelectorAll('style, link[rel="stylesheet"]'),
-  )
-    .map((node) => node.outerHTML)
-    .join("\n");
-
-  return `
-    <!doctype html>
-    <html lang="es">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>${documentTitle}</title>
-        ${styles}
-        <style>
-          html, body {
-            margin: 0;
-            padding: 0;
-            background: #f5f0e6;
-          }
-
-          .print-host {
-            display: block;
-            width: 210mm;
-            margin: 0 auto;
-            background: #f5f0e6;
-          }
-
-          .print-container {
-            display: block !important;
-          }
-
-          .print-page {
-            page-break-after: always;
-            width: 210mm;
-            height: 297mm;
-            padding: 0;
-            box-sizing: border-box;
-            background: #f5f0e6;
-          }
-
-          .print-page:last-child {
-            page-break-after: auto;
-          }
-
-          @page {
-            size: A4;
-            margin: 0;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="print-host">${element.innerHTML}</div>
-      </body>
-    </html>
-  `;
-}
-
-async function printInIsolatedWindow(element: HTMLElement, title: string) {
-  const printWindow = window.open("", "_blank");
-
-  if (!printWindow) {
-    throw new Error("No se pudo abrir la ventana de impresión.");
-  }
-
-  printWindow.document.open();
-  printWindow.document.write(buildPrintWindowMarkup(element, title));
-  printWindow.document.close();
-
-  await new Promise((resolve) => window.setTimeout(resolve, 500));
-
-  printWindow.focus();
-  printWindow.print();
 }
 
 /**
@@ -140,6 +64,8 @@ export function App() {
   useSpellbookStorage({ title, pages, isLoaded });
 
   const [isGeneratingPDF, setIsGeneratingPDF] = React.useState(false);
+  const [isMobilePrintPreviewOpen, setIsMobilePrintPreviewOpen] =
+    React.useState(false);
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
@@ -158,14 +84,10 @@ export function App() {
       return;
     }
 
-    setIsGeneratingPDF(true);
-
     try {
       if (shouldUseMobilePdfFallback()) {
-        await printInIsolatedWindow(
-          printRef.current,
-          title.replace(/\s+/g, "_") || "spellbook",
-        );
+        setIsMobilePrintPreviewOpen(true);
+        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
 
         return;
       }
@@ -174,7 +96,7 @@ export function App() {
     } finally {
       setIsGeneratingPDF(false);
     }
-  }, [handlePrint, title]);
+  }, [handlePrint]);
 
   React.useEffect(() => {
     const pageElement = document.getElementById(`page-${currentPageIndex}`);
@@ -189,6 +111,28 @@ export function App() {
     }
   }, [messages.header.defaultTitle, setTitle, title]);
 
+  const handleCloseMobilePrintPreview = React.useCallback(() => {
+    setIsMobilePrintPreviewOpen(false);
+  }, []);
+
+  const handlePrintMobilePreview = React.useCallback(() => {
+    window.print();
+  }, []);
+
+  React.useEffect(() => {
+    if (!isMobilePrintPreviewOpen) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [isMobilePrintPreviewOpen]);
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -196,6 +140,54 @@ export function App() {
           <div className="text-4xl text-gold mb-4 animate-pulse">&#x2726;</div>
           <p className="text-muted-foreground">{messages.app.loading}</p>
         </div>
+      </div>
+    );
+  }
+
+  if (isMobilePrintPreviewOpen) {
+    return (
+      <div className="min-h-screen bg-[#e8dfd2] text-[#3f3122] print:bg-white print:text-black">
+        <div className="sticky top-0 z-20 border-b border-[#63492c]/20 bg-[#f5f0e6]/95 backdrop-blur print:hidden">
+          <div className="mx-auto flex max-w-4xl flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 pr-1">
+              <p className="truncate text-sm font-semibold sm:text-base">{title}</p>
+              <p className="text-xs text-[#63492c]/80">
+                Usa Imprimir o Guardar PDF desde el navegador.
+              </p>
+            </div>
+            <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0 sm:justify-end">
+              <Button
+                variant="outline"
+                className="flex-1 border-[#63492c]/30 bg-white/70 text-[#3f3122] hover:bg-white sm:flex-none"
+                onClick={handleCloseMobilePrintPreview}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Volver
+              </Button>
+              <Button
+                className="flex-[1.35] bg-gold text-ink hover:bg-gold/90 sm:flex-none"
+                onClick={handlePrintMobilePreview}
+              >
+                <Printer className="mr-2 h-4 w-4" />
+                Imprimir o Guardar PDF
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <main className="mx-auto w-full max-w-4xl px-2 py-4 print:max-w-none print:px-0 print:py-0">
+          <div className="space-y-4 print:space-y-0">
+            {pages.map((page, index) => (
+              <section
+                key={`${page.id}-${index + 1}`}
+                className="overflow-hidden rounded-lg bg-[#f5f0e6] shadow-[0_12px_32px_rgba(41,28,14,0.18)] print:mb-0 print:rounded-none print:shadow-none print:break-after-page"
+                aria-label={`Página ${index + 1}`}
+              >
+                <Page page={page} title={title} isPrintMode isMobilePreview />
+              </section>
+            ))}
+          </div>
+        </main>
       </div>
     );
   }

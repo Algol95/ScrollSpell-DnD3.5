@@ -205,7 +205,11 @@ export function Header({
               className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center h-9"
             >
               <Download className="h-4 w-4 shrink-0" />
-              <span className="sm:hidden">{messages.header.pdfShort}</span>
+              <span className="sm:hidden">
+                {isGeneratingPDF
+                  ? messages.header.generating
+                  : messages.header.pdfShort}
+              </span>
               <span className="hidden sm:inline">
                 {isGeneratingPDF
                   ? messages.header.generating

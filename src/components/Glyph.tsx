@@ -1,6 +1,7 @@
 interface MagicGlyphProps {
   level: number;
   school: string;
+  scale?: number;
 }
 
 const schoolSymbols: Record<string, string> = {
@@ -46,7 +47,7 @@ function normalizeSchoolName(name: string): string {
  * @param param0 Props del componente MagicGlyph, incluyendo el nivel y la escuela del hechizo.
  * @returns Elemento JSX que representa el glifo mágico.
  */
-export function Glyph({ level, school }: MagicGlyphProps) {
+export function Glyph({ level, school, scale = 1 }: MagicGlyphProps) {
   const baseSize = 120 + level * 25;
   const opacity = 0.25;
   const rings = Math.min(Math.floor(level / 2) + 1, 5);
@@ -78,8 +79,8 @@ export function Glyph({ level, school }: MagicGlyphProps) {
       style={{ zIndex: 0 }}
     >
       <svg
-        width={baseSize}
-        height={baseSize}
+        width={baseSize * scale}
+        height={baseSize * scale}
         viewBox="0 0 100 100"
         className="text-ink"
         style={{ opacity, color: glyphColor }}
