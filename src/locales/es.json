@@ -85,9 +85,9 @@
     "github": "GitHub",
     "twitch": "Twitch",
     "discord": "Discord",
-    "portfolio": "Portfolio",
+    "portfolio": "Web",
     "donateTitle": "Apoya el proyecto",
-    "donateDescription": "Si ScrollSpell te resulta útil en tus partidas, puedes ayudar a mantener y mejorar la aplicación con una donación por PayPal.",
+    "donateDescription": "Si SpellBook te resulta útil en tus partidas, puedes ayudar a mantener y mejorar la aplicación con una donación por PayPal.",
     "donateHint": "Tu apoyo ayuda a seguir iterando la herramienta, pulir detalles y mantenerla online.",
     "donateAction": "Donar con PayPal",
     "donatePending": "Añade tu enlace real de PayPal en Footer.tsx para activar el botón de donación."

@@ -40,6 +40,16 @@ export function Footer() {
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a
+                href="https://www.angelaragondev.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-4 py-2 text-sm text-foreground transition hover:border-gold/40 hover:text-gold"
+                aria-label={messages.footer.portfolio}
+              >
+                <FaGlobe className="h-4 w-4" />
+                <span>{messages.footer.portfolio}</span>
+              </a>
+              <a
                 href="https://www.linkedin.com/in/angel-dev-aragon"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -79,16 +89,6 @@ export function Footer() {
                 <FaDiscord className="h-4 w-4" />
                 <span>{messages.footer.discord}</span>
               </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden items-center gap-2 rounded-full border border-border bg-background/60 px-4 py-2 text-sm text-foreground transition hover:border-gold/40 hover:text-gold"
-                aria-label={messages.footer.portfolio}
-              >
-                <FaGlobe className="h-4 w-4" />
-                <span>{messages.footer.portfolio}</span>
-              </a>
             </div>
 
             <div className="mt-6 border-t border-border/80 pt-5 text-sm text-muted-foreground">
@@ -96,7 +96,7 @@ export function Footer() {
                 &copy; {new Date().getFullYear()} {messages.header.defaultTitle}
                 . {messages.footer.madeByPrefix}{" "}
                 <a
-                  href="https://www.linkedin.com/in/angel-dev-aragon"
+                  href="https://www.angelaragondev.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-accent transition hover:text-gold"
