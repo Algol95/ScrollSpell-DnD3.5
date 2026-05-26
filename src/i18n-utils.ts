@@ -49,10 +49,9 @@ function detectSystemLocale(): Locale {
     return "en";
   }
 
-  const languages = navigator.languages ?? [navigator.language];
-  const hasSpanish = languages.some((language) =>
-    language.toLowerCase().startsWith("es"),
-  );
+  const primaryLanguage =
+    navigator.languages?.[0] ?? navigator.language ?? "en";
+  const hasSpanish = primaryLanguage.toLowerCase().startsWith("es");
 
   return hasSpanish ? "es" : "en";
 }

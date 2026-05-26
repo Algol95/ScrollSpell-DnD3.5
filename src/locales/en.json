@@ -8,6 +8,8 @@
     "downloadPdf": "Download PDF",
     "generating": "Generating...",
     "pdfShort": "PDF",
+    "spellbookLabel": "Spellbook",
+    "createSpellbook": "Create spellbook",
     "languageLabel": "Language",
     "languageOptions": {
       "en": "EN",

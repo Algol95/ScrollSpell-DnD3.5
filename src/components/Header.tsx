@@ -17,6 +17,7 @@ import {
   Pencil,
   Check,
   Languages,
+  Plus,
 } from "lucide-react";
 import { type Locale, useTranslation } from "../i18n-utils";
 
@@ -27,6 +28,13 @@ import { type Locale, useTranslation } from "../i18n-utils";
  */
 interface HeaderProps {
   title: string;
+  spellbooks: Array<{
+    id: string;
+    title: string;
+  }>;
+  activeSpellbookId: string;
+  onSpellbookChange: (spellbookId: string) => void;
+  onCreateSpellbook: () => void;
   onTitleChange: (title: string) => void;
   totalPages: number;
   currentPage: number;
@@ -42,6 +50,10 @@ interface HeaderProps {
  */
 export function Header({
   title,
+  spellbooks,
+  activeSpellbookId,
+  onSpellbookChange,
+  onCreateSpellbook,
   onTitleChange,
   totalPages,
   currentPage,
@@ -89,7 +101,7 @@ export function Header({
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={handleKeyDown}
                     onBlur={handleSave}
-                    className="h-8 text-lg font-bold bg-background/50 border-gold/50 focus:border-gold w-48"
+                    className="h-8 w-40 sm:w-48 text-lg font-bold bg-background/50 border-gold/50 focus:border-gold"
                     autoFocus
                   />
                   <Button
@@ -174,48 +186,85 @@ export function Header({
             </Button>
           </div>
 
-          <div className="grid grid-cols-[4rem_minmax(0,1fr)] gap-2 w-full sm:flex sm:w-auto sm:items-center">
-            <Select
-              value={locale}
-              onValueChange={(value) => setLocale(value as Locale)}
-            >
-              <SelectTrigger
-                size="sm"
-                aria-label={messages.header.languageLabel}
-                className="w-full min-w-0 h-9 px-2.5 sm:px-2 bg-background/60 border-border justify-center"
+          <div className="grid grid-cols-1 gap-2 w-full sm:flex sm:w-auto sm:items-center">
+            <div className="grid grid-cols-[minmax(0,1fr)_2.25rem] gap-2 sm:min-w-56">
+              <Select
+                value={activeSpellbookId}
+                onValueChange={onSpellbookChange}
               >
-                <div className="flex items-center justify-center gap-1.5 w-full">
-                  <Languages className="h-3.5 w-3.5 text-muted-foreground" />
-                  <SelectValue placeholder={messages.header.languageLabel} />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">
-                  {messages.header.languageOptions.en}
-                </SelectItem>
-                <SelectItem value="es">
-                  {messages.header.languageOptions.es}
-                </SelectItem>
-              </SelectContent>
-            </Select>
+                <SelectTrigger
+                  size="sm"
+                  aria-label={messages.header.spellbookLabel}
+                  className="w-full min-w-0 h-9 px-2.5 bg-background/60 border-border"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0 w-full">
+                    <BookOpen className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <SelectValue placeholder={messages.header.spellbookLabel} />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  {spellbooks.map((spellbook) => (
+                    <SelectItem key={spellbook.id} value={spellbook.id}>
+                      {spellbook.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Button
-              onClick={onGeneratePDF}
-              disabled={isGeneratingPDF}
-              className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center h-9"
-            >
-              <Download className="h-4 w-4 shrink-0" />
-              <span className="sm:hidden">
-                {isGeneratingPDF
-                  ? messages.header.generating
-                  : messages.header.pdfShort}
-              </span>
-              <span className="hidden sm:inline">
-                {isGeneratingPDF
-                  ? messages.header.generating
-                  : messages.header.downloadPdf}
-              </span>
-            </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onCreateSpellbook}
+                aria-label={messages.header.createSpellbook}
+                className="h-9 w-9"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-[4rem_minmax(0,1fr)] gap-2 sm:flex sm:items-center">
+              <Select
+                value={locale}
+                onValueChange={(value) => setLocale(value as Locale)}
+              >
+                <SelectTrigger
+                  size="sm"
+                  aria-label={messages.header.languageLabel}
+                  className="w-full min-w-0 h-9 px-2.5 sm:px-2 bg-background/60 border-border justify-center"
+                >
+                  <div className="flex items-center justify-center gap-1.5 w-full">
+                    <Languages className="h-3.5 w-3.5 text-muted-foreground" />
+                    <SelectValue placeholder={messages.header.languageLabel} />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">
+                    {messages.header.languageOptions.en}
+                  </SelectItem>
+                  <SelectItem value="es">
+                    {messages.header.languageOptions.es}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button
+                onClick={onGeneratePDF}
+                disabled={isGeneratingPDF}
+                className="bg-gold text-ink hover:bg-gold/90 w-full sm:w-auto justify-center h-9"
+              >
+                <Download className="h-4 w-4 shrink-0" />
+                <span className="sm:hidden">
+                  {isGeneratingPDF
+                    ? messages.header.generating
+                    : messages.header.pdfShort}
+                </span>
+                <span className="hidden sm:inline">
+                  {isGeneratingPDF
+                    ? messages.header.generating
+                    : messages.header.downloadPdf}
+                </span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

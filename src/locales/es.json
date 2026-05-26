@@ -8,6 +8,8 @@
     "downloadPdf": "Descargar PDF",
     "generating": "Generando...",
     "pdfShort": "PDF",
+    "spellbookLabel": "Grimorio",
+    "createSpellbook": "Crear grimorio",
     "languageLabel": "Idioma",
     "languageOptions": {
       "en": "EN",

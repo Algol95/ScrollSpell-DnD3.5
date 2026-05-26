@@ -30,6 +30,10 @@ function shouldUseMobilePdfFallback() {
 export function App() {
   const { messages } = useTranslation();
   const {
+    spellbooks,
+    activeSpellbookId,
+    handleSpellbookChange,
+    handleCreateSpellbook,
     pages,
     currentPageIndex,
     setCurrentPageIndex,
@@ -61,7 +65,7 @@ export function App() {
     [setTitle],
   );
 
-  useSpellbookStorage({ title, pages, isLoaded });
+  useSpellbookStorage({ activeSpellbookId, spellbooks, isLoaded });
 
   const [isGeneratingPDF, setIsGeneratingPDF] = React.useState(false);
   const [isMobilePrintPreviewOpen, setIsMobilePrintPreviewOpen] =
@@ -198,6 +202,13 @@ export function App() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header
         title={title}
+        spellbooks={spellbooks.map(({ id, title: spellbookTitle }) => ({
+          id,
+          title: spellbookTitle,
+        }))}
+        activeSpellbookId={activeSpellbookId}
+        onSpellbookChange={handleSpellbookChange}
+        onCreateSpellbook={handleCreateSpellbook}
         onTitleChange={handleTitleChange}
         totalPages={pages.length}
         currentPage={currentPageIndex + 1}
